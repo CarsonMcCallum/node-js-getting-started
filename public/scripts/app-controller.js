@@ -4,8 +4,8 @@ class Point {
       this.x = x;
       this.y = y;
     }
-  
     static displayName = "Point";
+
     static distance(a, b) {
       const dx = a.x - b.x;
       const dy = a.y - b.y;
@@ -24,10 +24,10 @@ console.log(Point.distance(p1, p2));
 *   Section navigation.  
 */
 
-var currentPage = "home";
+var currentPage = "splash";
 
 var pageDetails = {
-    "home":{
+    "splash":{
         show:{
             yPercent:0,
             xPercent:0,
@@ -36,30 +36,56 @@ var pageDetails = {
             yPercent:0,
             xPercent:-100
         }
+    },
+    "home":{
+      show:{
+          yPercent:0,
+          xPercent:0,
+       },
+      hide:{
+          yPercent:0,
+          xPercent:100
+      }
+  },
+  "game-loading-screen":{
+        show:{
+            yPercent:0,
+            xPercent:0,
+        },
+        hide:{
+            yPercent:0,
+            xPercent:100
+        }
     }
+
 }
 
 function setInitialPagePositions(){
+  
+  gsap.set('section[data-section="home"]', pageDetails["home"].hide);
+  gsap.set('section[data-section="game-loading-screen"]', pageDetails["game-loading-screen"].hide);
+  console.log('shit fuck',pageDetails["home"].hide.xPercent);
     
 }
 
 
+
 function navigate(e){
 
-console.log('navigate to',e.value);
+console.log('navigate to', e.value);
 
 let page_current = pageDetails[currentPage];
 let next_page = pageDetails[e.value];
 
     let pageTL = new TimelineMax({});
-    pageTL.to('section[name="'+currentPage+'"]',{
-            yPercent:page_current.hide.yPercent,
-            xPercent:page_current.hide.xPercent
-        });
-    pageTL.to('section[name="'+e.value+'"]',{
-            yPercent:next_page.show.yPercent,
-            xPercent:next_page.show.xPercent
-    });
+
+    pageDetails[currentPage].hide.duration = 1;
+    pageDetails[e.value].show.duration = 1;
+
+    gsap.to('section[data-section="'+currentPage+'"]',pageDetails[currentPage].hide);
+    gsap.to('section[data-section="'+e.value+'"]',pageDetails[e.value].show);
+
+    currentPage = e.value;
 
 }
 

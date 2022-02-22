@@ -2,18 +2,33 @@
 <html>
 <head>
   <%- include ("../partials/header.ejs") %>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
 </head>
+<body>
+  <div id="App">
 
-<body>cool-ascii-faces
-
-  <%- include ("../partials/nav.ejs") %>
-<section class="" name="home">
-Home
-  <button value="practice" onClick="navigate(this);">Practice</button>
-</section>
-<section class="" name="practice">
-  Practice
-    <button value="home" onClick="navigate(this);">Home</button>
+    <section class="" data-section="splash">
+      <div class="section-container">
+        <%- include ("../partials/splash.ejs") %>
+      </div>
+    </section>
+    
+    <section class="" id="home" data-section="home">
+        <div class="section-container">
+          <%- include ("../partials/home.ejs") %>
+        </div>
+    </section>
+    
+    <section class="" id="game-loading-screen" data-section="game-loading-screen">
+      <div class="section-container">
+       Loading game
+      </div>
   </section>
+
+
+  </div>
 </body>
+<script>
+  setInitialPagePositions();
+</script>
 </html>

@@ -1,10 +1,34 @@
 html{
   height:100%;
   overflow: hidden;
+  font-family: 'Do Hyeon', sans-serif;
+  font-size:16px;
 }
 body{
   background-color: darkgray;
   height: 100%;
+  margin:0px;
+  overflow: hidden;
+}
+
+#App{
+  position: relative;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+.game-title{
+  font-family: 'Bangers', cursive;
+  font-size: 4rem;
+  color: white;
+  text-shadow: -1px 2px black;
+}
+
+.page-title{
+  font-size: 1.3rem;
+  color: white;
+  text-shadow: -1px 2px black;
 }
 
 
@@ -13,8 +37,120 @@ section{
   display:block;
   min-height: 100%;
   width:100%;
+  position: absolute;
+  left:0px;
+  right: 0px;
+  height: 100%;
+  width: 100%;
+}
+
+.section-container{
+  position: relative;
+  height: 100%;
+  width: 100%;
 }
 
 .section-center-content{
 
+}
+
+
+
+/* Global classes */
+.gap-medium{
+  gap:2rem;
+}
+
+.gap-large{
+  gap:5rem;
+}
+
+.content-divider-small{
+  height:5vh;
+}
+
+
+
+
+
+/* Flex classes 
+Guide: https://primer.style/css/utilities/flexbox
+*/
+.d-flex { display: flex; }
+.d-inline-flex { display: inline-flex; }
+.flex-row            { flex-direction: row; }
+.flex-row-reverse    { flex-direction: row-reverse; }
+.flex-column         { flex-direction: column; }
+.flex-column-reverse { flex-direction: column-reverse; }
+.flex-wrap           { flex-wrap: wrap; }
+.flex-nowrap         { flex-wrap: nowrap; }
+.flex-wrap-reverse   { flex-wrap: wrap-reverse; }
+.flex-justify-start    { justify-content: flex-start; }
+.flex-justify-end      { justify-content: flex-end; }
+.flex-justify-center   { justify-content: center; }
+.flex-justify-between  { justify-content: space-between; }
+.flex-justify-around   { justify-content: space-around; }
+.flex-items-start      { align-items: flex-start; }
+.flex-items-end        { align-items: flex-end; }
+.flex-items-center     { align-items: center; }
+.flex-items-baseline   { align-items: baseline; }
+.flex-items-stretch    { align-items: stretch; }
+.flex-1        { flex: 1; }
+.flex-auto     { flex: auto; }
+.flex-grow-0   { flex-grow: 0; }
+.flex-shrink-0 { flex-shrink: 0; }
+.flex-self-auto        { align-self: auto; }
+.flex-self-start       { align-self: flex-start; }
+.flex-self-end         { align-self: flex-end; }
+.flex-self-center      { align-self: center; }
+.flex-self-baseline    { align-self: baseline; }
+.flex-self-stretch     { align-self: stretch; }
+
+
+.flex-push-to-column-bottom{
+  margin-top: auto;
+  margin-bottom: 5%;
+}
+
+.height-100{
+height: 100%;;
+}
+
+
+/* Button classes */
+
+.button{
+  font-family:inherit;
+}
+
+.button.primary{
+  padding: 0.8rem 2rem;
+  box-shadow: 0px -2px 0px 1px black inset;
+  border: 1px solid gray;
+  border-radius: 3px;
+  font-size: 1rem;
+}
+
+.button.large{
+  padding: 1rem 20px;
+  box-shadow: 0px -2px 0px 1px black inset;
+  border: 1px solid gray;
+  border-radius: 3px;
+  font-size: 1.1rem;
+  width: 100%;
+  max-width: 280px;
+}
+
+
+
+/* Modes */
+.pane{
+  width: 80%;
+  text-align: center;
+  padding: 5%;
+  border: 1px solid;
+  min-height: 150px;
+  border-radius: 3px;
+  background: white;
+  box-shadow: 0px -4px 0px 0px inset #00000033;
 }
