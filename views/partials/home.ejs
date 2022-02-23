@@ -3,11 +3,24 @@
     <div class="d-flex flex-justify-center page-title">Choose a mode!</div>
 
     <div class="d-flex flex-justify-center"> 
-            <button value="game-loading-screen" onClick="navigate(this);" class="pane">
-                Practice mode
-            </button>
+          <div class="d-flex flex-justify-center game-mode-container">
+                <div data-mode-name="practice" data-action-id="expand_mode_overview" class="pane game-mode">
+                  <div class="d-flex flex-column flex-justify-center height-100 gap-medium">
+                    <div class="title">Practice mode</div>
+                    <div class="game-mode-details">
+                      Details go here.
+                    </div>
+                    <div class="loading-cancel-actions hidden">
+                      <button class="button primary large" data-action-id="cancel_load_mode">Cancel</button>
+                    </div>
+                    </div>
+                </div>
+
+            
+                
+          </div>
     </div>
         <div class="d-flex flex-justify-center flex-push-to-column-bottom"> 
-          <button class="button primary large" value="splash" onClick="navigate(this);">Return to splash</button>
+          <button class="button primary large"  data-action-id="navigate_to_section" data-action-target="splash">Return to splash</button>
         </div>
   </div>

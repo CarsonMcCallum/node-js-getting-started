@@ -19,15 +19,35 @@
         </div>
     </section>
     
+  <!--  -->
+
+    <section class="hidden" id="mode-overview-screen" data-section="mode-overview-screen">
+    <div class="section-container mode-overview-container">
+
+      </div>
+
+      <div class="game-mode-actions" style="padding:0px 5%;">
+        <div class="d-flex flex-row flex-justify-center">
+          <button class="button primary large back-button" data-action-id="close_mode_overview">Back</button>
+          <button class="button primary large" data-action-id="load_open_mode">Start</button>
+          </div>
+      </div>
+    </section>
+  
     <section class="" id="game-loading-screen" data-section="game-loading-screen">
       <div class="section-container">
        Loading game
       </div>
-  </section>
+    </section>
 
 
   </div>
 </body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/Flip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/Draggable.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/TextPlugin.min.js"></script>
 <script>
   setInitialPagePositions();
 </script>

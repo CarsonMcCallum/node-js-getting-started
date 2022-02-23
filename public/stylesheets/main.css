@@ -57,6 +57,9 @@ section{
 
 
 /* Global classes */
+.hidden{
+  display: none;
+}
 .gap-medium{
   gap:2rem;
 }
@@ -141,16 +144,67 @@ height: 100%;;
   max-width: 280px;
 }
 
+.button.large.back-button{
+  width: 25%;
+  margin-right: 5%;
+}
+
+
+.game-mode-actions{
+  z-index: 100;
+  position: absolute;
+  bottom: 15%;
+  width: 80%;
+  padding: 0px 10%;
+}
 
 
 /* Modes */
+
+.game-mode-container{
+  width: 90%;
+}
 .pane{
-  width: 80%;
+  width: 100%;
   text-align: center;
-  padding: 5%;
+
   border: 1px solid;
   min-height: 150px;
   border-radius: 3px;
   background: white;
   box-shadow: 0px -4px 0px 0px inset #00000033;
+}
+
+.game-mode-container .pane .game-mode-details{
+  display: none;
+}
+.game-mode-container .pane .game-mode-actions{
+  display: none;
+}
+
+.game-mode-container .game-mode .title{
+
+}
+
+.game-mode-container .pane div{
+  pointer-events: none;
+}
+
+
+.mode-overview-container .pane{
+  height:100%;
+  max-width: 100%;
+}
+
+.mode-overview-container .game-mode .title{
+
+}
+
+.loading-cancel-actions{
+  padding:5% 0px;
+}
+
+/* Global classes */
+.hidden{
+  display: none;
 }
