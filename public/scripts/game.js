@@ -50,12 +50,13 @@ function Game(server,parent,toggleMasterLoadingScreen) {
 
     create = function () {
         try{
+
         console.log('create')
         let gameBoard = document.createElement('div');
         gameBoard.classList.add("board","level-one");
 
         console.log('elem',this.parent)
-        parent.appendChild(gameBoard);
+       // parent.appendChild(gameBoard);
 
 
         let allSections = document.querySelectorAll('section');
@@ -70,7 +71,6 @@ function Game(server,parent,toggleMasterLoadingScreen) {
         let gameScreen = document.querySelector('#game');
         gameScreen.classList.remove('hidden');
 
-        
         
 
         this.toggleMasterLoadingScreen(false)
