@@ -86,6 +86,70 @@ function Game(server,parent,toggleMasterLoadingScreen) {
       
     }
 
+
+    var triangle = function({w,h,f,sw,sc}){
+        let graphic = '<svg width="'+w+'" height="'+h+'">';
+            graphic+='<rect width="'+w+'" height="'+h+'" style="fill:'+f+';stroke-width:'+sw+';stroke:'+sc+'" />';
+            graphic+='</svg>';
+        return graphic;
+    }
+
+    var card = function(_cardId, graphic = []){
+        let _c = '<div id="card-'+_cardId+'" class="card show-front" data-s="1" data-c="1" data-f="0" data-n="0">';
+            _c+=    '<div class="front">';
+              
+
+
+                    for(let i = 0; i < graphic.length;i++){
+                        _c+= '<div class="graphic">';
+                        _c += graphic[i];
+                        _c+= '</div>';
+                    }
+
+              
+            _c+=   '</div>';
+            _c+=  '<div class="back"></div>';
+            _c+= '</div>';
+        return _c;
+    }
+
+    var cardId = 0;
+
+        var cardStyles = {
+            "S1C1F1N1":{
+                w:60,
+                h:25,
+                f:'rgba(145,124,223,.3)',
+                sw:4,
+                sc:'rgb(145,124,223)'
+            }
+        }
+
+
+    /* Test:
+        let g = new Game();
+        g.createCard();
+    */
+
+    this.createCard = function(){
+        cardId++;
+        let newCard = card(cardId,
+                        [
+                            triangle(cardStyles["S1C1F1N1"]),
+                            triangle(
+                                cardStyles["S1C1F1N1"]
+                                ),
+                            triangle(cardStyles["S1C1F1N1"])
+                        ]
+            )
+
+        let boardBox = document.querySelectorAll(".box");
+        console.log(cardId)
+        boardBox[cardId].innerHTML = newCard;
+        gsap.from('#card-' + cardId,{duration:.4,scale:1.4,opacity:0,ease:"back.out(1.7)"})
+
+    }
+
   
     this.showModeActions = function () {
       if(this.gameModeActionsVisible == true) {

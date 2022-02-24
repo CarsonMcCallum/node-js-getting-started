@@ -217,6 +217,16 @@
     /* position: absolute; */
     left: 0px;
     right: 0px;
+
+    width: 100px;
+    height: 148px;
+    background-color: white;
+    margin: auto;
+    /* position: absolute; */
+    left: 0px;
+    right: 0px;
+    box-shadow: 0px 0px 2px black inset, 0px -5px 0px #00000040 inset;
+    border-radius: 10px;
     /* box-shadow: 0px 0px 2px black inset, 0px -3px 0px #00000040 inset; */
   
 }
@@ -234,6 +244,8 @@
     display: flex;
     align-items: center;
     flex-direction: column;
+    justify-content: center;
+   
 }
 .card[data-s="0"][data-c="0"][data-f="0"][data-n="1"]{
     background: url(/cards/S0C0F0N1.png);
