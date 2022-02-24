@@ -18,6 +18,8 @@ body{
   overflow: hidden;
 }
 
+
+
 .game-title{
   font-family: 'Bangers', cursive;
   font-size: 4rem;
@@ -40,6 +42,7 @@ section{
   position: absolute;
   left:0px;
   right: 0px;
+  top:0px;
   height: 100%;
   width: 100%;
 }
@@ -52,6 +55,13 @@ section{
 
 .section-center-content{
 
+}
+
+
+.master-loading-screen{
+  opacity: 1;
+  background: black;
+  z-index: 10000;
 }
 
 

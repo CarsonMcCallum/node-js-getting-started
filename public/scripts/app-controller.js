@@ -1,25 +1,6 @@
 var ModeOverview = new ModeOverviewManager();
-
-class Point {
-    constructor(x, y) {
-      this.x = x;
-      this.y = y;
-    }
-    static displayName = "Point";
-
-    static distance(a, b) {
-      const dx = a.x - b.x;
-      const dy = a.y - b.y;
-  
-      return Math.hypot(dx, dy);
-    }
-  }
-
-const p1 = new Point(5, 5);
-const p2 = new Point(10, 10);
-
-console.log(Point.distance(p1, p2));
-
+var $Game, $GameServer, 
+overviewModeName;
 
 /*
 *   Section navigation.  
@@ -47,24 +28,60 @@ var pageDetails = {
           yPercent:0,
           xPercent:100
       }
-  },
-  "game-loading-screen":{
-        show:{
-            yPercent:0,
-            xPercent:0,
-        },
-        hide:{
-            yPercent:0,
-            xPercent:100
-        }
-    }
+  }
 
 }
+
+
+var masterLoadingScreen = document.querySelector("#master-loading-screen"),
+    gameElem = document.querySelector('#game');
+
+function toggleMasterLoadingScreen(value = false, callback = false){
+
+    let _dur = .3;
+
+
+    if(value == true){
+        console.log("Show masterLoadingScreen")
+        masterLoadingScreen.classList.remove('hidden');
+        gsap.set(masterLoadingScreen,{clearProps:"all"});
+        gsap.set(masterLoadingScreen,{opacity:0});
+
+        gsap.to(masterLoadingScreen,{
+            duration:_dur,
+            opacity:1,
+            onComplete:callback
+        }
+        );
+    }
+    if(value == false){
+
+        console.log("Hide masterLoadingScreen");
+
+        gsap.to(masterLoadingScreen,{
+            duration:_dur,
+            opacity:0,
+            onStart:function(){
+                
+            },
+            onComplete:function(){
+                masterLoadingScreen.classList.add('hidden');
+                if(callback){
+                    console.log("callback...")
+                    callback();
+                }
+            }
+        }
+        );
+    }
+
+
+}
+
 
 function setInitialPagePositions(){
   
   gsap.set('section[data-section="home"]', pageDetails["home"].hide);
-  gsap.set('section[data-section="game-loading-screen"]', pageDetails["game-loading-screen"].hide);
   console.log('shit fuck',pageDetails["home"].hide.xPercent);
     
 }
@@ -135,11 +152,13 @@ document.addEventListener('click', (event) => {
       // Open mode overview. 
       if(actionId == "expand_mode_overview"){
          let modeName = event.target.dataset.modeName;
+         overviewModeName = modeName;
          ModeOverview.openModeOverview(modeName);
       }
 
       if(actionId == "close_mode_overview"){
           ModeOverview.closeModeOverview();
+          overviewModeName = false;
       }
 
       if(actionId == "load_open_mode"){
@@ -156,18 +175,50 @@ document.addEventListener('click', (event) => {
 });
 
 
+var loadModeTimeout = false;
 
 function loadOpenGameMode(){
 
     ModeOverview.hideModeActions();
     ModeOverview.showCancelButton();
 
+    // Simulate establish connection.
+    loadModeTimeout = setTimeout(function(){
+        toggleMasterLoadingScreen(true,function(){
+            //navigate("game");
+            connectToServer();
+           
+        });
+    },1000);
+
 }
 
 function cancelLoadOpenGameMode(){
+
+    try{
+        clearTimeout(loadModeTimeout);
+        console.log('Canceled loadMoadTimeout')
+    }catch(e){
+        console.log(e)
+    }
     
     ModeOverview.hideCancelButton();
     ModeOverview.showModeActions();
 }
 
+
+
+function connectToServer(){
+
+    $GameServer = new GameServer("p1",overviewModeName);
+    if($GameServer.connect()){
+        console.log("connected...");
+        console.log('gameElem',gameElem)
+        $Game = new Game($GameServer,gameElem,toggleMasterLoadingScreen);
+        $GameServer.connectEventEmitter($Game.eventHandler);
+        
+        
+    }
+    
+}
 
