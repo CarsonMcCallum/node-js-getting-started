@@ -1,3 +1,4 @@
+var ModeOverview = new ModeOverviewManager();
 
 class Point {
     constructor(x, y) {
@@ -68,6 +69,10 @@ function setInitialPagePositions(){
     
 }
 
+setInitialPagePositions();
+console.log('hi')
+
+
 
 
 function navigate(newSection){
@@ -106,6 +111,7 @@ const actionList = [
     'expand_mode_overview',
     'close_mode_overview',
     'load_open_mode',
+    'cancel_load_mode'
     // ...
   ];
   
@@ -129,15 +135,19 @@ document.addEventListener('click', (event) => {
       // Open mode overview. 
       if(actionId == "expand_mode_overview"){
          let modeName = event.target.dataset.modeName;
-         openModeOverview(modeName)
+         ModeOverview.openModeOverview(modeName);
       }
 
       if(actionId == "close_mode_overview"){
-          closeModeOverview();
+          ModeOverview.closeModeOverview();
       }
 
       if(actionId == "load_open_mode"){
           loadOpenGameMode();
+      }
+
+      if(actionId == "cancel_load_mode"){
+          cancelLoadOpenGameMode();
       }
 
     
@@ -146,100 +156,18 @@ document.addEventListener('click', (event) => {
 });
 
 
-function openModeOverview(modeName){
-
-    let modeOverviewSection = document.querySelector('#mode-overview-screen');
-    let modeOverviewContainer = document.querySelector('.mode-overview-container');
-
-    let modePane = document.querySelector('.game-mode[data-mode-name="'+modeName+'"]');
-
-    let modeActions = document.querySelector('.game-mode-actions');
-
-    const state = Flip.getState(modePane);
-
-    // Show mode overview section.
-    modeOverviewSection.classList.remove("hidden");
-
-    // Append mode pane.
-    modeOverviewContainer.appendChild(modePane);
-
-    // Animate.
-    Flip.from(state, {
-        // Optional properties related to HOW it's transitioned
-        duration: 1,
-        ease: "power4.out"
-    });
-
-    gsap.to('.mode-overview-container .game-mode .title',{scale:2});
-
-    gsap.set(modeActions,{clearProps:"all"})
-    gsap.from(modeActions,{
-            opacity:0,
-            delay:.3, 
-            duration:.5,
-            yPercent:100,
-            ease:"back.out(1.7)"
-        });
-
-}
-
-function closeModeOverview(){
-
-    let modeOverviewSection = document.querySelector('#mode-overview-screen');
-    let gameModeContainer = document.querySelector('.game-mode-container');
-
-    let modePane = document.querySelector('#mode-overview-screen .game-mode');
-
-    let modeActions = document.querySelector('.game-mode-actions');
-
-    const state = Flip.getState(modePane);
-
-    // Show mode overview section.
-    //modeOverviewSection.classList.remove("hidden");
-
-    // Append mode pane.
-    gameModeContainer.appendChild(modePane);
-
-    // Animate.
-    Flip.from(state, {
-        // Optional properties related to HOW it's transitioned
-        duration: 0.5,
-        ease: "power4.out",
-        onComlpete:function(){
-            modeOverviewSection.classList.add("hidden");
-        }
-    });
-
-    gsap.to('.game-mode .title',{duration: 0.5,scale:1});
-
-    gsap.to(modeActions,{
-            opacity:0,
-            duration:.3,
-            yPercent:100,
-            ease:"back.out(1.7)"
-    });
-}
-
-
 
 function loadOpenGameMode(){
 
-    let modePane = document.querySelector('#mode-overview-screen .game-mode');
+    ModeOverview.hideModeActions();
+    ModeOverview.showCancelButton();
 
-    let cancelActions = document.querySelector('#mode-overview-screen .game-mode .loading-cancel-actions');
+}
 
-    gsap.to('.game-mode-actions',{
-        opacity:0,
-        duration:.3,
-        yPercent:100,
-        ease:"back.out(1.7)"
-    });
-
-    cancelActions.classList.remove('hidden');
-    gsap.from(cancelActions,{duration:.5,scale:0})
-
+function cancelLoadOpenGameMode(){
     
-
+    ModeOverview.hideCancelButton();
+    ModeOverview.showModeActions();
 }
 
 

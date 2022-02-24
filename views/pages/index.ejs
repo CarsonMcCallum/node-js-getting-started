@@ -28,8 +28,13 @@
 
       <div class="game-mode-actions" style="padding:0px 5%;">
         <div class="d-flex flex-row flex-justify-center">
-          <button class="button primary large back-button" data-action-id="close_mode_overview">Back</button>
-          <button class="button primary large" data-action-id="load_open_mode">Start</button>
+            <button class="button primary large back-button" data-action-id="close_mode_overview">Back</button>
+             <button class="button primary large" data-action-id="load_open_mode">Start</button>
+          </div>
+      </div>
+      <div class="game-mode-cancel hidden" style="padding:0px 5%;">
+        <div class="d-flex flex-row flex-justify-center">
+            <button class="button primary large" data-action-id="cancel_load_mode">Cancel</button>
           </div>
       </div>
     </section>
@@ -48,7 +53,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/Flip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/Draggable.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/TextPlugin.min.js"></script>
+
+<script src="/scripts/mode-overview-manager.js"></script>
+<script src="/scripts/app-controller.js"></script>
 <script>
-  setInitialPagePositions();
 </script>
 </html>

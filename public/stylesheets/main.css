@@ -158,6 +158,17 @@ height: 100%;;
   padding: 0px 10%;
 }
 
+.game-mode-cancel{
+  z-index: 100;
+  position: absolute;
+  bottom: 25%;
+  width: 80%;
+  padding: 0px 10%;
+  left: 0px;
+  right: 0px;
+  margin: auto;
+}
+
 
 /* Modes */
 

@@ -1,4 +1,5 @@
 const express = require('express')
+
 const path = require('path')
 const host = '0.0.0.0';
 const port = process.env.PORT || 3000;
@@ -10,6 +11,8 @@ express()
   .get('/', (req, res) => res.render('pages/index'))
   //.listen(process.env.PORT || 3000)
   //.listen(PORT, () => console.log(`Listening on ${ PORT }`))
+
+  // If getting deployment error, remove PORT in .env file.
   .listen(port, host, function() {
     console.log("Server started.......");
   });
