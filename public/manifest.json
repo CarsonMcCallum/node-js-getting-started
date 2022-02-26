@@ -1,13 +1,13 @@
 {
     "name": "Carson MCCallum",
     "short_name": "DumbCards",
-    "theme_color": "#ffcbe4",
-    "background_color": "#fa99ca",
+    "theme_color": "#a9a9a9",
+    "background_color": "#a9a9a9",
     "display": "standalone",
     "scope": "/",
     "start_url": "https://dumb-cards.herokuapp.com/",
     "description": "Dumb cards for dumb people.",
-    "orientation": "any",
+    "orientation": "fullscreen",
     "icons": [
         {
             "src": "https://christine.website/static/img/avatar.png",
