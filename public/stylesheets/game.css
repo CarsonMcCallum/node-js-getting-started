@@ -63,6 +63,7 @@
     align-items: center;
     overflow: visible;  
     gap:10px;
+
 }
 
 .player-gui-picture{
@@ -238,6 +239,10 @@
     transform-style: preserve-3d;
 }
 
+.card.selected{
+    box-shadow: 0px 0px 0px 4px #3da1ff inset;
+}
+
 .card.show-front .front{
     visibility: visible;
 }
@@ -254,6 +259,7 @@
     flex-direction: column;
     justify-content: center;
     gap:3px;
+    pointer-events: none;
    
 }
 

@@ -52,8 +52,12 @@ class GameServer {
     event(name,data = false){
       console.log("game-server", name)
       if(name == "ready to start"){
+
         this.emit("deal deck");
-       
+        let _this = this;
+        setTimeout(function(){
+          _this.emit("start");
+        },2000);
       }
 
 
