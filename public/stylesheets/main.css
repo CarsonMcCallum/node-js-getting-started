@@ -121,7 +121,7 @@ Guide: https://primer.style/css/utilities/flexbox
 
 .flex-push-to-column-bottom{
   margin-top: auto;
-  margin-bottom: 5%;
+  margin-bottom: 5vh;
 }
 
 .height-100{
