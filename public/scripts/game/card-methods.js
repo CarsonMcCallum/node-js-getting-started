@@ -29,8 +29,8 @@
         return graphic;
     }
 
-    var $Card = function(cardId,s,c,f,n, graphic = []){
-        let _c = '<div id="'+cardId+'" data-player-action-id="touch_card" data-selected="false" class="card show-front" data-s="'+s+'" data-c="'+c+'" data-f="'+f+'" data-n="'+n+'">';
+    var $Card = function(index, cardId,s,c,f,n, graphic = []){
+        let _c = '<div id="'+cardId+'" data-index="'+index+'" data-player-action-id="touch_card" data-selected="false" class="card show-front" data-s="'+s+'" data-c="'+c+'" data-f="'+f+'" data-n="'+n+'">';
             _c+=    '<div class="front">';
               
                     for(let i = 0; i < graphic.length;i++){

@@ -51,7 +51,7 @@ function Game(server,parent,toggleMasterLoadingScreen) {
                 _this.shuffleArray(_this.deck);
                for(let i = 0; i <= 11; i++){
                     let nextCard = _this.getNextCard();
-                    let card = _this.createCard(nextCard);
+                    let card = _this.createCard(i, nextCard);
                     _this.drawCard(card,i);
                  }
             }
@@ -149,7 +149,7 @@ function Game(server,parent,toggleMasterLoadingScreen) {
         $Chevron
     ];
 
-    this.createCard = function({shape,color,fill,number}){
+    this.createCard = function(index, {shape,color,fill,number}){
         let cardId = "card-" + String(shape) + String(color) + String(fill) + String(number);
 
         let _shape = shapeArr[shape],
@@ -179,7 +179,7 @@ function Game(server,parent,toggleMasterLoadingScreen) {
 
         
 
-        let newCard = $Card(cardId,shape,color,fill,number,_graphicArr);
+        let newCard = $Card(index, cardId,shape,color,fill,number,_graphicArr);
         newCard = $stringToHTML(newCard); // Make string into node.
         
 
@@ -336,13 +336,13 @@ function Game(server,parent,toggleMasterLoadingScreen) {
 
                 if(isValid){
                     //Message correct!
-                    alert('u did it!')
+                    //alert('u did it!')
                     //replaceCards(selects);
                     //resetVars();
                     let selectedCards = document.querySelectorAll('.card.selected');
 
                     selectedCards.forEach(function(elem){
-
+                    let _boardIndex = elem.dataset.index;
                     gsap.to(elem,.3,{
                         background:"#5FF7A8",
                         scale:1.1,
@@ -357,14 +357,20 @@ function Game(server,parent,toggleMasterLoadingScreen) {
                         ease:"back.out(1.7)",
                         onComplete:function(){
                             elem.remove();
-                            _this.allowPlayerInput = true;
-                            _this.selects = [];
+                            let x = _this.getNextCard();
+                            _this.drawCard($Game.createCard(_boardIndex,x),_boardIndex);
+                           
                         }
                     });
                     
                    
                   
                     });
+
+                    setTimeout(function(){
+                        _this.allowPlayerInput = true;
+                        _this.selects = [];
+                    },3000)
                 
                 } else {
                 //Message error!
