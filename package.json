@@ -1,7 +1,7 @@
 {
-  "name": "node-js-getting-started",
+  "name": "dumb-cards",
   "version": "0.3.0",
-  "description": "A sample Node.js app using Express 4",
+  "description": "Dumb cards for dumb people.",
   "engines": {
     "node": "14.x"
 
