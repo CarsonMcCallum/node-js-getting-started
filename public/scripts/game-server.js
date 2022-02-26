@@ -18,6 +18,7 @@ class GameServer {
     }
 
     connectEventEmitter(GameEventHandler){
+      
       if(GameEventHandler){
         let _this = this;
         this.emitter = GameEventHandler;
@@ -48,7 +49,13 @@ class GameServer {
 
     }
 
-    event(){
+    event(name,data = false){
+      console.log("game-server", name)
+      if(name == "ready to start"){
+        this.emit("deal deck");
+       
+      }
+
 
     }
 
