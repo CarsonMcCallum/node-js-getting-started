@@ -1,14 +1,13 @@
-html{
+html,body{
   height:100%;
   overflow: hidden;
   font-family: 'Do Hyeon', sans-serif;
   font-size:16px;
-}
-body{
   background-color: darkgray;
   height: 100%;
   margin:0px;
   overflow: hidden;
+  touch-action:none;
 }
 
 #App{
@@ -35,7 +34,6 @@ body{
 
 
 section{
-  border:1px solid white;
   display:block;
   min-height: 100%;
   width:100%;
@@ -45,6 +43,7 @@ section{
   top:0px;
   height: 100%;
   width: 100%;
+  box-shadow: 0px 0px 1px inset white;
 }
 
 .section-container{
@@ -134,6 +133,7 @@ height: 100%;;
 
 .button{
   font-family:inherit;
+
 }
 
 .button.primary{
@@ -142,6 +142,7 @@ height: 100%;;
   border: 1px solid gray;
   border-radius: 3px;
   font-size: 1rem;
+  color:black;
 }
 
 .button.large{
