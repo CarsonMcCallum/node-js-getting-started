@@ -14,13 +14,17 @@ function Game(server,parent,toggleMasterLoadingScreen) {
       this.mode = null;
       this.rules = null;
       this.players = null;
+      this.playerId = "p1"; 
       this.server = server;
       this.toggleMasterLoadingScreen = toggleMasterLoadingScreen;
       this.parent = parent;
       this.deck = [];
       this.selects = [];
       this.allowPlayerInput = false;
-      _this = this;
+      this.clockElem = null;
+      const _this = this;
+
+      //_game = this;
       
 
      
@@ -42,18 +46,34 @@ function Game(server,parent,toggleMasterLoadingScreen) {
         console.log('parseEvent')
 
 
-            if(event.name == "create game"){
-                create();
+            if(event.name == "create board"){
+                createBoard();
             }
 
             if(event.name == "deal deck"){
+                console.log('game.js','deal deck')
                 _this.createDeck();
                 _this.shuffleArray(_this.deck);
+                console.log(_this.deck)
+
                for(let i = 0; i <= 11; i++){
                     let nextCard = _this.getNextCard();
+                    console.log('nextCard',nextCard)
                     let card = _this.createCard(i, nextCard);
                     _this.drawCard(card,i);
                  }
+            }
+
+            if(event.name == "draw card"){
+                console.log('game.js','start draw card ------')
+                if("card" in event.data){
+                    //console.log('card exists,', event.data)
+                    let card = _this.createCard(event.data.index,event.data.card);
+                    //console.log(card)
+                    _this.drawCard(card,event.data.index)
+                }
+
+                console.log('game.js','end draw card ------')
             }
 
             if(event.name == "start"){
@@ -61,13 +81,19 @@ function Game(server,parent,toggleMasterLoadingScreen) {
                 _this.allowPlayerInput = true;
                 _this.initateListener();
             }
+
+            if(event.name == "clock"){
+                gsap.set('.time',{text:event.data.time})
+            }
             
+            if(event.name == "set"){
+                console.log('set',event)
+            }
     }
 
 
     this.eventHandler = function (event) {
         console.log('eventHandler')
-
         try{
             console.log(event);
             parseEvent(event)
@@ -76,18 +102,25 @@ function Game(server,parent,toggleMasterLoadingScreen) {
         }
     }
 
-
-    this.sendToServer = function(data){
-        _this.server.event(data);
+    // Send messages to server, which relays them to logic.
+    this.sendToServer = function(name,data){
+        console.log('game.js sendToServer',data)
+        _this.server.event({pid:this.playerId,name:name,data:data});
     }
 
 
+    this.load = function(){
+        console.log('load...');
+        console.log(this.server)
+        this.server.connectEventEmitter(this.eventHandler);
+    }
 
-    create = function () {
+
+    createBoard = function () {
 
         try{
 
-        console.log('create')
+        console.log('createBoard')
         let gameBoard = document.createElement('div');
         gameBoard.classList.add("board","level-one");
 
@@ -107,8 +140,8 @@ function Game(server,parent,toggleMasterLoadingScreen) {
         let gameScreen = document.querySelector('#game');
         gameScreen.classList.remove('hidden');
 
-    
-        this.toggleMasterLoadingScreen(false);
+        
+        this.clockElem = document.querySelector('.time');
 
         }catch(e){
             console.log(e)
@@ -116,8 +149,12 @@ function Game(server,parent,toggleMasterLoadingScreen) {
 
         _this.sendToServer("ready to start");
         
-
+        this.toggleMasterLoadingScreen(false);
         
+    }
+
+    this.showBoard = function(){
+        this.toggleMasterLoadingScreen(false);
     }
   
 
@@ -150,17 +187,20 @@ function Game(server,parent,toggleMasterLoadingScreen) {
     ];
 
     this.createCard = function(index, {shape,color,fill,number}){
+       // console.log('game.js','createCard...')
         let cardId = "card-" + String(shape) + String(color) + String(fill) + String(number);
 
         let _shape = shapeArr[shape],
              _graphicArr = [];
         
+        /*
         console.log( $CardStyles[$CardTheme].shapes[shape].w,
             $CardStyles[$CardTheme].shapes[shape].h,
             $CardStyles[$CardTheme].shapes[shape].sw,
         // Color properties.
             $CardStyles[$CardTheme].colors[color].sc,
             $CardStyles[$CardTheme].colors[color].f[fill])
+            */
         
         for(let i = 0; i <= number; i++){
                     // Shape paramaters: w,h,sw,f,sc
@@ -446,18 +486,20 @@ function Game(server,parent,toggleMasterLoadingScreen) {
                 
             
                 if(playerActionId == "touch_card"){
-                    console.log('touch_card...')
+                    _this.sendToServer("touch_card",{boardIndex:event.target.dataset.index});
+                    console.log('touch_card...',event.target.dataset.index)
                     //let actionTarget =  event.target.dataset.actionTarget;
                     //navigate(actionTarget);
                     if(_this.allowPlayerInput){
                         if(event.target.dataset.selected == "false"){
                            _this.selectCard(event.target);
-                           console.log('click card')
-                           
+                           console.log('click card');
                         }
                     }
                    // alert('touch card');
                 }
+
+                
 
             }
 

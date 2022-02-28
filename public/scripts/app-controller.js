@@ -1,5 +1,5 @@
 var ModeOverview = new ModeOverviewManager();
-var $Game, $GameServer, 
+var $Game, gameServer,
 overviewModeName;
 
 /*
@@ -207,15 +207,25 @@ function cancelLoadOpenGameMode(){
 }
 
 
+connectToServer()
+
 
 function connectToServer(){
 
-    $GameServer = new GameServer("p1",overviewModeName);
-    if($GameServer.connect()){
+    // Create server instance and send along game mode. 
+    gameServer = new $GameServer();
+
+    if(gameServer.connect("p1")){
         console.log("connected...");
-        console.log('gameElem',gameElem)
+        
+        // Create local game instance, connect to server and gameElem container, and overlay.
         $Game = new Game($GameServer,gameElem,toggleMasterLoadingScreen);
-        $GameServer.connectEventEmitter($Game.eventHandler);
+      // gameServer.connectGame($Game));
+
+        // Connect $Game and $Game event handler. 
+        
+        gameServer.connectEventEmitter($Game,$Game.eventHandler);
+
         
         
     }

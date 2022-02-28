@@ -1,4 +1,4 @@
-
+//https://betterprogramming.pub/how-to-create-your-own-event-emitter-in-javascript-fbd5db2447c4
   class Emitter {
     constructor() {
       this._events = {};
