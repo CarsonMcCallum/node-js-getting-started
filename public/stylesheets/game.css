@@ -9,6 +9,12 @@
     overflow: hidden;
 }
 
+.game-mode-details{
+    padding: 0px 100px;
+    opacity: .5;
+    line-height: 1.5;
+}
+
 .deck-holder{
     width: 120px;
     height: 168px;
