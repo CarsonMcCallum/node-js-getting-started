@@ -8,6 +8,8 @@ var $stringToHTML = function (str) {
     return doc.body.firstChild;
 };
 
+
+
 function Game(server,parent,toggleMasterLoadingScreen) {
 
 
@@ -19,8 +21,10 @@ function Game(server,parent,toggleMasterLoadingScreen) {
       this.toggleMasterLoadingScreen = toggleMasterLoadingScreen;
       this.parent = parent;
       this.deck = [];
+      this.activeCards = [];
       this.selects = [];
       this.allowPlayerInput = false;
+      this.inputMode = "standby"; // Game input modes: standby->active->matching->disabled
       this.clockElem = null;
       const _this = this;
 
@@ -43,6 +47,14 @@ function Game(server,parent,toggleMasterLoadingScreen) {
 
 
     parseEvent = function (event) {
+
+
+
+        if(event.name == "clock"){
+            gsap.set('.time',{text:event.data.time})
+            return true;
+        }
+
         console.log('parseEvent')
 
 
@@ -69,7 +81,8 @@ function Game(server,parent,toggleMasterLoadingScreen) {
                 if("card" in event.data){
                     //console.log('card exists,', event.data)
                     let card = _this.createCard(event.data.index,event.data.card);
-                    //console.log(card)
+                    //console.log(card);
+                    _this.activeCards[event.data.index] = card;
                     _this.drawCard(card,event.data.index)
                 }
 
@@ -78,24 +91,40 @@ function Game(server,parent,toggleMasterLoadingScreen) {
 
             if(event.name == "start"){
                 console.log("Start!");
+                gsap.set('.time',{scale:1,opacity:1});
+                gsap.from('.time',{duration:.4,scale:0,opacity:0})
+                // Set all box widths so they dont change when cards move.
+                let box = tools.getOne('.box:nth-child(1)');
+                gsap.set('.box',{width:box.clientWidth,height:box.clientHeight});
+
                 _this.allowPlayerInput = true;
+                _this.inputMode = "enabled";
                 _this.initateListener();
             }
 
-            if(event.name == "clock"){
-                gsap.set('.time',{text:event.data.time})
-            }
             
-            if(event.name == "set"){
-                console.log('set',event)
+            if(event.name == "match"){
+                console.log('match',event)
+                console.log('player',event.data.pid);
+                console.log('matching card indexes',event.data.indexes);
+                _this.allowPlayerInput = false;
+                _this.correctMatch(event.data.pid,event.data.indexes);
+            }
+
+            if(event.name == "incorrect"){
+                setTimeout(_this.incorrectMatch,300)
+            }
+
+            if(event.name == "hint"){
+                _this.cardHint(event.data.boardIndex)
             }
     }
 
 
     this.eventHandler = function (event) {
-        console.log('eventHandler')
+        //console.log('eventHandler')
         try{
-            console.log(event);
+            //console.log(event);
             parseEvent(event)
         }catch(e){
             console.log(e)
@@ -364,76 +393,122 @@ function Game(server,parent,toggleMasterLoadingScreen) {
         return SET;
       }
 
+    this.correctMatch = function(pid, indexes){
+
+        // Get cards and order them by 
+        let matchesBoxIndex = 0;
+        let delay = .5;
+        
+        indexes.forEach(function(i,index){
+           
+            let correctCard = _this.activeCards[i];
+            correctCard.classList.remove('selected');
+
+            let tl = new gsap.timeline();
+            gsap.set(correctCard,{clearProps:"all"})
+            gsap.killTweensOf(correctCard)
+
+            tl.fromTo(correctCard,
+                {
+                    duration:.4,
+                    backgroundColor:"#81c784"
+                },{
+                    scale:1.1,
+                    duration:.5,
+                    background:"white",
+                    //ease:"back.in(1.7)"
+                }
+            )
+            //tl.to(correctCard,{duration:.5,scale:1.1})
+        });
+
+        setTimeout(function(){
+
+            tools.removeClass(".shout","hidden");
+            tools.removeClass(".matches-container","hidden");
+
+            let matchCardRotations = [-20,0,20];
+            indexes.forEach(function(i,index){
+
+            let correctCard = _this.activeCards[i];
+            gsap.killTweensOf(correctCard)
+            //gsap.set(correctCard,{clearProps:"all"})
+            let matchesBox = document.querySelector('.matches-box[data-index="'+index+'"]')
+            const state = Flip.getState(correctCard);
+            matchesBox.appendChild(correctCard);
+
+            gsap.set(correctCard,{
+                //backgroundColor:"white",
+                scale:1.4,
+                rotate:matchCardRotations[index]
+            })
+            
+            // Animate.
+            Flip.from(state, {
+                    // Optional properties related to HOW it's transitioned
+                    duration: .5,
+                    scale:1,
+                    ease: "expo.inOut"
+                });
+
+                
+
+        });
+
+        let tl = new gsap.timeline();
+        tl.from('.shout-background-matches',{opacity:0,duration:.5})
+        tl.from('.shout-text',{duration:.5,delay:1,opacity:0,yPercent:20,ease:"back.out(1.7)"},"-=1");
+        
+      
+
+        setTimeout(function(){
+            _this.clearMatchedShout();
+        },2000)
+    }, delay * 1000)
+
+            setTimeout(function(){
+                _this.allowPlayerInput = true;
+                _this.selects = [];
+            },3000)
+    }
+
+    this.clearMatchedShout = function(){
+        let matchesBoxes = tools.getAll('.matches-box');
+        let tl = new gsap.timeline();
+
+        gsap.to('.shout-background-matches',{opacity:0,duration:.5})
+        gsap.to('.shout-text',{duration:.4,delay:0,opacity:0,yPercent:20,ease:"expo.in"})
+        gsap.to(matchesBoxes,{duration:.5,scale:0,opacity:0,onComplete:function(){
+            matchesBoxes.forEach(function(mb){
+                mb.innerHTML = "";
+            })
+            tools.addClass('.shout','hidden');
+            gsap.set('.shout-text',{clearProps:"all"});
+            gsap.set('.shout-background-matches',{clearProps:"all"});
+            gsap.set('.matches-box',{clearProps:"all"});
+            _this.allowPlayerInput = true;
+        }},"-=.4")
+      
+    }
+
+    this.cardHint = function(cardIndex){
+        // Wiggle params are set in index.ejs
+        console.log('cardHint')
+        let cards = document.querySelectorAll('.card');
+        gsap.to(cards[cardIndex], {duration:2,rotation:20, ease:"Wiggle.uniform"})
+    }
+
     this.selectCard = function(card){
 
         _this.selects.push(card);
 
         if(_this.selects.length >= 3){
             _this.allowPlayerInput = false;
-            var isValid = _this.checkIfSET(_this.selects);
+
+            // Wait for response from server.
 
             setTimeout(function(){//Wait half a second before proceeding
-
-                if(isValid){
-                    //Message correct!
-                    //alert('u did it!')
-                    //replaceCards(selects);
-                    //resetVars();
-                    let selectedCards = document.querySelectorAll('.card.selected');
-
-                    selectedCards.forEach(function(elem){
-                    let _boardIndex = elem.dataset.index;
-                    gsap.to(elem,.3,{
-                        background:"#5FF7A8",
-                        scale:1.1,
-                        onComplete:function(){
-                            _this.allowPlayerInput = true;
-                        }
-                    });
-                    gsap.to(elem,.5,{
-                        scale:1.5,
-                        opacity:0,
-                        delay:.5,
-                        ease:"back.out(1.7)",
-                        onComplete:function(){
-                            elem.remove();
-                            let x = _this.getNextCard();
-                            _this.drawCard($Game.createCard(_boardIndex,x),_boardIndex);
-                           
-                        }
-                    });
-                    
-                   
-                  
-                    });
-
-                    setTimeout(function(){
-                        _this.allowPlayerInput = true;
-                        _this.selects = [];
-                    },3000)
-                
-                } else {
-                //Message error!
-                    console.log('No set!');
-                    let selectedCards = document.querySelectorAll('.card.selected');
-
-                    
-                    gsap.from('.card.selected',.5,{
-                        rotation:10,
-                        background:"red",
-                        ease:"back.out(1.7)",
-                        onComplete:function(){
-                            _this.allowPlayerInput = true;
-                        }
-                    });
-                    
-                    selectedCards.forEach(function(elem){
-                        elem.classList.remove('selected');
-                    });
-                }
-               
-                _this.selects.splice(0);
-            },300);
+             },300);
 
             
          } else if(_this.selects.length<3) {
@@ -448,9 +523,6 @@ function Game(server,parent,toggleMasterLoadingScreen) {
             number:card.dataset.n
         };
 
-
-
-
         card.classList.add('selected');
         gsap.from(card,
             {
@@ -458,6 +530,30 @@ function Game(server,parent,toggleMasterLoadingScreen) {
            ease:"back.out(1.7)"
             }
         );
+    }
+
+    this.incorrectMatch = function(){
+        _this.allowPlayerInput = false;
+
+        gsap.from('.card.selected',.5,{
+            rotation:10,
+            background:"red",
+            ease:"back.out(1.7)",
+            onComplete:function(){
+                _this.allowPlayerInput = true;
+            }
+        });
+
+        _this.selects.forEach(function(elem){
+            elem.classList.remove('selected');
+            elem.dataset.selected = "false";
+        });
+        _this.selects.splice(0);
+
+        let cards = tools.getAll('.cards');
+        cards.forEach(function(c){
+            tools.removeClass('.cards.selected')
+        })
     }
 
     this.initateListener = function(){
@@ -492,6 +588,7 @@ function Game(server,parent,toggleMasterLoadingScreen) {
                     //navigate(actionTarget);
                     if(_this.allowPlayerInput){
                         if(event.target.dataset.selected == "false"){
+                            event.target.dataset.selected = "true";
                            _this.selectCard(event.target);
                            console.log('click card');
                         }

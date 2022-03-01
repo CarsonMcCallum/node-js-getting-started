@@ -1,27 +1,35 @@
 
 // https://github.com/mdn/js-examples/blob/master/modules/dynamic-module-imports/modules/canvas.js
-
-// Helpers.
 function $GameLogic() {
 
 
       this.mode = null;
       this.gameVars = {
         boardLength:null,
-        gameLength:120
+        gameLength:120,
+        hints:{
+          allowed:true,
+          interval:15, // Show hint every X seconds.
+          max:9
+        }
       };
       this.players = null;
       this.server = null;
       this.serverEvent = null;
       this.deck = [];
+      this.score = 0;
       this.activeCards = [];
       this.usedCards = [];
       this.selects = [];
       this.clock = null;
+      this.timeSinceLastMatch = 0;
+      this.hintIndex = 0; // Progressively hint cards.
+      this.hintsGiven = 0;
+      this.timeSinceLastHint = 0;
       this.allowPlayerInput = false;
       const _this = this;
-
       this.gameInterval = null;
+
       
 
       // Helper funcitons.
@@ -84,15 +92,52 @@ function $GameLogic() {
      // console.log('update logic...')
 
       _this.clock--;
-      //console.log(_this.clock)
+      //console.log(_this.clock);
 
+      _this.timeSinceLastMatch++;
+
+      // Check hints. 
+      _this.updateHints();
+      
+
+
+      // Update time.
       if(this.clock != 0){
         let minutes = Math.floor(_this.clock / 60);
         let seconds = _this.clock - minutes * 60;
-        let mmss = minutes + ":" + seconds;
+        let addZero = "";
+        if(seconds < 10){
+          addZero = "0";
+        }
+        let mmss = minutes + ":" + addZero + seconds;
         _this.sendEvent("clock",{time:mmss})
       }
+
+      if(this.clock <= 0){
+        alert('Final score: ' + this.score);
+      }
       
+    }
+
+
+    this.updateHints = function(){
+      if(_this.gameVars.hints.allowed){
+        console.log('hints allowed')
+        if(_this.timeSinceLastHint >= _this.gameVars.hints.interval){
+          if(_this.hintsGiven < _this.gameVars.hints.max){
+            console.log('show hint')
+            _this.timeSinceLastHint = 0;
+            _this.hint();
+            _this.hintsGiven++;
+          }else{
+            console.log('no more hints allowed!')
+            _this.gameVars.hints.allowed = false; // Turn off for logging.
+          }
+        }
+        _this.timeSinceLastHint++;
+        //console.log('timeSinceLastHint',_this.timeSinceLastHint)
+        //console.log('_this.gameVars.hints.interval',_this.gameVars.hints.interval);
+      }
     }
 
     /*
@@ -103,14 +148,15 @@ function $GameLogic() {
 
     this.drawCards = function(){
         console.log('drawCards...')
-       // this.sendEvent("deal deck")
-      
-        
+
+        var cardsForBoard = [];
+
         for(let i = 0; i <= this.gameVars.boardLength ; i++){
             let nextCard = _this.getNextCard();
             console.log('nextCard',nextCard)
             let card = _this.createCard(i, nextCard);
             //_this.drawCard(card,i);
+           // cardsForBoard.push(card)
             this.activeCards.push(nextCard);
             this.sendEvent("draw card",{card:nextCard,index:i})
         }
@@ -119,10 +165,12 @@ function $GameLogic() {
         setTimeout(function(){
             _this.sendEvent("start");
             _this.setGameInterval(true,_this.gameVars.gameLength);
+            _this.checkIfBoardHasMatch();
         },2000)
         
     }
     
+
 
 
     parsePlayerEvent = function (event) {
@@ -188,14 +236,21 @@ function $GameLogic() {
     }
     */
 
-    var drawQuene = 0,
-        drawIncrement = .1;
+    this.drawNextCards = function(indexes){
+      console.log('this.drawNextCards...',indexes)
 
-    this.drawCard = function(cardHTML, boardIndex = 0){
-        
+      for(let i = 0; i < 3;i++){
 
+          let nextCard = _this.getNextCard();
+          console.log('nextCard',nextCard)
+          let card = _this.createCard(i, nextCard);
+          //_this.drawCard(card,i);
+         // cardsForBoard.push(card)
+          this.activeCards[indexes[i]] = nextCard;
+          this.sendEvent("draw card",{card:nextCard,index:indexes[i]})
+
+      }
     }
-
 
     this.getNextCard = function(){
         var card = this.deck[0];
@@ -228,9 +283,9 @@ function $GameLogic() {
 
   
 
-    this.checkIfSET = function(cards){
+    this.checkIfMatch = function(cards){
 
-        var SET = true;
+        var Match = true;
         var data = {
           shape: [],
           color: [],
@@ -274,11 +329,12 @@ function $GameLogic() {
         }
         for(var array in data){
           if(!checkIfSameOrDifferent(data[array])){
-            SET = false;
+            Match = false;
           }
         }
-        return SET;
+        return Match;
       }
+
 
     this.selectCard = function(pid,boardIndex){ 
 
@@ -294,24 +350,42 @@ function $GameLogic() {
             console.log('logic says check');
             console.log(_this.selects[playerSelectsIndex])
             //_this.allowPlayerInput = false;
-            var isValid = _this.checkIfSET(_this.selects[playerSelectsIndex]);
+            var isValid = _this.checkIfMatch(_this.selects[playerSelectsIndex]);
 
                 if(isValid){
-                  console.log('logic isValid set!')
+                  console.log('logic isValid Match!')
+                  _this.timeSinceLastHint = 0;
+
+                  _this.score++;
+
+                  _this.clock+= 30; // Add 30 seconds.
+
                     //Message correct!
                     //alert('u did it!')
                     //replaceCards(selects);
                     //resetVars();
+                    let matchedCardsIndexes = [];
                     _this.selects[playerSelectsIndex].forEach(function(_c,index){
                       let _cardIndex = _this.activeCards.indexOf(_c);
                       console.log('_cardIndex',_cardIndex)
-                    })
+                      matchedCardsIndexes.push(_cardIndex);
+                    });
+
+                    _this.sendEvent("match", {pid:pid,indexes:matchedCardsIndexes});
+
+                    setTimeout(function(){
+                      _this.drawNextCards(matchedCardsIndexes);
+                    },3000);
+
                     //_this.sendEvent(pid,)
+
+                    _this.selects[playerSelectsIndex].splice(0);
                   
                 } else {
                 //Message error!
-                    console.log('logic - No set!'); 
+                    console.log('logic - No Match!'); 
                    _this.selects[playerSelectsIndex].splice(0);
+                   _this.sendEvent("incorrect",{pid:pid});
                 }
 
             
@@ -319,12 +393,67 @@ function $GameLogic() {
             //_this.selects.splice(_this.selects.indexOf(card),1);
            // $(this).removeClass("selected");
         }
-        
-  
 
     }
 
 
+    this.checkIfBoardHasMatch = function(){
+      let matchExists = this.findMatches();
+    
+      if(matchExists.length > 0){
+        console.log('match exists', matchExists.length)
+      }else{
+        _this.sendEvent("no matches exist")
+
+      }
+    }
+
+
+    this.findMatches = function(){
+      let counter = 0;
+      let MatchesFound = [];
+      var cards = _this.activeCards;
+
+      for(var x = 0; x < cards.length; x++){
+        for(var y = 1; y < cards.length; y++){
+          for(var z = 2; z < cards.length; z++){
+            if(cards[x]!==cards[y]&&
+            _this.checkIfMatch([cards[x],cards[y],cards[z]])){
+              MatchesFound.push([cards[x],cards[y],cards[z]]);
+            }
+          }
+        }
+      }
+      return MatchesFound;
+    }
+
+ this.hint = function(){
+  var Matches = this.findMatches();
+  if(Matches.length>0){
+    //find the next card from a random Match and highlight it
+    var currentMatch = currentMatch||Matches[Math.floor(Math.random())*Matches.length];
+    //$(currentMatch[0]).addClass("highlight");
+    console.log('Matches found', currentMatch.length)
+    console.log('hint',_this.activeCards.indexOf(currentMatch[0]))
+    console.log('hint',_this.activeCards.indexOf(currentMatch[1]))
+    console.log('hint',_this.activeCards.indexOf(currentMatch[2]))
+  
+
+    
+    let _cardIndex = _this.activeCards.indexOf(currentMatch[this.hintIndex]);
+    console.log('_cardIndex',_cardIndex);
+    _this.sendEvent("hint",{boardIndex:_cardIndex});
+    this.hintIndex++;
+    if(this.hintIndex > 2){
+      this.hintIndex = 0; // Reset hintIndex.
+    }
+
+    //hintCounter++;
+  } else {
+    console.log('no Matches found')
+    //$("#add").addClass("highlight");
+  }
+}
 
     
   }

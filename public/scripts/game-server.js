@@ -40,7 +40,7 @@ function $GameServer (){
 
     this.emit = function(name,data = false){
       if(_gameServer.emitter){
-        console.log('game-server emit:', {name, data});
+        //console.log('game-server emit:', {name, data});
         _gameServer.emitter({name:name,data:data});
       }else{
         console.log("Error: Emitter disconnected for GameServer")

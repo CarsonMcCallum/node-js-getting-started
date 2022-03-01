@@ -62,7 +62,13 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/Flip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/Draggable.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/TextPlugin.min.js"></script>
-<script src="/scripts/emitter.js"></script>
+<script src="/lib/gsap/CustomEase.min.js"></script>
+<script src="/lib/gsap/CustomWiggle.min.js"></script>
+<script>
+  gsap.registerPlugin(CustomEase, CustomWiggle);
+  CustomWiggle.create("Wiggle.uniform", {wiggles:6, type:"uniform"});
+</script>
+<script src="/scripts/tools.js"></script>
 <script src="/scripts/game/card-styles.js"></script>
 <script src="/scripts/game/card-methods.js"></script>
 <script src="/scripts/game.js"></script>
