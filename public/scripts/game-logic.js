@@ -117,6 +117,7 @@ function $GameLogic() {
 
       if(_this.clock <= 0){
         clearInterval(_this.gameInterval);
+        _this.sendEvent("game over",{score:"Final score: " + _this.score})
         _this.sendEvent("clock", {time:"Final score: " + _this.score})
       }
 
@@ -362,7 +363,7 @@ function $GameLogic() {
 
                   _this.score++;
 
-                  _this.clock+= 30; // Add 30 seconds.
+                  _this.clock+= 10; // Add 30 seconds.
 
                     //Message correct!
                     //alert('u did it!')
@@ -390,6 +391,7 @@ function $GameLogic() {
                 //Message error!
                     console.log('logic - No Match!'); 
                    _this.selects[playerSelectsIndex].splice(0);
+                   _this.clock-= 30;
                    _this.sendEvent("incorrect",{pid:pid});
                 }
 
@@ -397,6 +399,7 @@ function $GameLogic() {
          }else if(_this.selects.length<3) {
             //_this.selects.splice(_this.selects.indexOf(card),1);
            // $(this).removeClass("selected");
+ 
         }
 
     }
@@ -408,8 +411,8 @@ function $GameLogic() {
       if(matchExists.length > 0){
         console.log('match exists', matchExists.length)
       }else{
-        _this.sendEvent("no matches exist")
-
+        _this.sendEvent("no matches");
+        setTimeout(_this.drawCards,2000);
       }
     }
 

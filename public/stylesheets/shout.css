@@ -96,3 +96,31 @@ width: 100%;
 .matches .card{
     transform:scale(1.4);
 }
+
+
+.shout-effect{
+    position: absolute;
+    top: 0px;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+}
+
+.shout-effect-text{
+    text-shadow: -1px 2px black;
+    text-shadow: -1px 9px black;
+    color: #fff;
+    position: absolute;
+    top: 42%;
+    width: 100%;
+    font-size: 3.5rem;
+    text-align: center;
+}
+.shout-effect-background{
+    position: absolute;
+    top: 31%;
+    height: 30%;
+    width: 100%;
+    text-align: center;
+    background: linear-gradient(120deg, #44b5ff, #03a9f4);
+}

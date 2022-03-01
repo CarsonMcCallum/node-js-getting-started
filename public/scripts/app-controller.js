@@ -207,7 +207,6 @@ function cancelLoadOpenGameMode(){
 }
 
 
-//connectToServer()
 
 
 function connectToServer(){

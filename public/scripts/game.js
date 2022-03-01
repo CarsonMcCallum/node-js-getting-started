@@ -9,6 +9,17 @@ var $stringToHTML = function (str) {
 };
 
 
+var failText = [
+    "stupid bitch",
+    "dumbass",
+    "dumb bitch",
+    "ugly fuck",
+    "fuck you",
+    "you suck shit",
+    "retarded",
+    "get fucked",
+    "kill yourself"
+];
 
 function Game(server,parent,toggleMasterLoadingScreen) {
 
@@ -27,6 +38,7 @@ function Game(server,parent,toggleMasterLoadingScreen) {
       this.inputMode = "standby"; // Game input modes: standby->active->matching->disabled
       this.clockElem = null;
       const _this = this;
+      this.clock = null;
 
       //_game = this;
       
@@ -51,7 +63,8 @@ function Game(server,parent,toggleMasterLoadingScreen) {
 
 
         if(event.name == "clock"){
-            gsap.set('.time',{text:event.data.time})
+            gsap.set('.time',{text:event.data.time});
+            this.clock = event.data.time;
             return true;
         }
 
@@ -90,6 +103,7 @@ function Game(server,parent,toggleMasterLoadingScreen) {
             }
 
             if(event.name == "start"){
+                _this.shout("positive","Start!")
                 console.log("Start!");
                 gsap.set('.time',{scale:1,opacity:1});
                 gsap.from('.time',{duration:.4,scale:0,opacity:0})
@@ -113,10 +127,31 @@ function Game(server,parent,toggleMasterLoadingScreen) {
 
             if(event.name == "incorrect"){
                 setTimeout(_this.incorrectMatch,300)
+                var textItem = failText[Math.floor(Math.random()*failText.length)];
+                setTimeout(_this.shout("negative",textItem),750)
             }
 
             if(event.name == "hint"){
                 _this.cardHint(event.data.boardIndex)
+            }
+
+            if(event.name == "no matches"){
+
+                _this.shout("negative","Shuffle!");
+
+                gsap.to('.card',{duration:1,scale:0,onComplete:function(){
+                    let boxes = tools.getAll('.box');
+                    boxes.forEach(function(box){
+                        box.innerHTML = "";
+                    })
+                }});
+
+            }
+
+            if(event.name == "game over"){
+                _this.shout("negative","Game over!");
+                _this.allowPlayerInput = false;
+               // setTimeout(_this.shout("positive",event.data.score),3000)
             }
     }
 
@@ -604,6 +639,31 @@ function Game(server,parent,toggleMasterLoadingScreen) {
 
     }
 
+    this.shout = function(name,text){
+        let tl = new gsap.timeline();
+        gsap.set('.shout-effect-text',{text:text});
+        tools.removeClass('.shout-effect','hidden');
+
+        if(name == "positive"){
+
+            gsap.set('.shout-effect-background',{background:"linear-gradient(120deg, #44b5ff, #03a9f4)"})
+           
+        }
+        if(name == "negative"){
+            gsap.set('.shout-effect-background',{background:"linear-gradient(120deg, #e91e63, #e91e63)"})
+        }
+
+        tl.from('.shout-effect-background',{duration:.5,top:"46%",height:0,ease:"bounce.out(1.7)"});
+        tl.from('.shout-effect-text',{duration:.5,scale:0,ease:"expo.out",ease:"expo.out(1.7)"},"-=.2");
+        tl.to('.shout-effect-background',{duration:.5,top:"46%",height:0,ease:"expo.in(1.7)"});
+        tl.to('.shout-effect-text',{duration:.3,scale:0,ease:"expo.in(1.7)"},"-=.3");
+        tl.add(function(){
+            tools.addClass('.shout-effect','hidden');
+            gsap.set('.shout-effect-text',{clearProps:"all"})
+            gsap.set('.shout-effect-background',{clearProps:"all"})
+        })
+    }
+
 
     this.createReportList = function () {
       if(this.activeMode !== null) {
@@ -621,6 +681,8 @@ function Game(server,parent,toggleMasterLoadingScreen) {
   
       }
     }
+
+
 
 
     
