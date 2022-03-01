@@ -64,7 +64,7 @@
     overflow: visible;  
     gap:10px;
     opacity: 0;
-
+    width: 60px;
 }
 
 .player-gui-picture{
@@ -175,6 +175,7 @@
     padding-right: 5px;
 
     opacity: 0;
+    padding-right: 9px;
 }
 
 

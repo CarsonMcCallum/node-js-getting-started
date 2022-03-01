@@ -91,7 +91,7 @@ function $GameLogic() {
     this.update = function(){
      // console.log('update logic...')
 
-      _this.clock--;
+ 
       //console.log(_this.clock);
 
       _this.timeSinceLastMatch++;
@@ -101,8 +101,10 @@ function $GameLogic() {
       
 
 
+     
       // Update time.
-      if(this.clock != 0){
+      if(_this.clock > 0){
+        _this.clock--;
         let minutes = Math.floor(_this.clock / 60);
         let seconds = _this.clock - minutes * 60;
         let addZero = "";
@@ -113,9 +115,11 @@ function $GameLogic() {
         _this.sendEvent("clock",{time:mmss})
       }
 
-      if(this.clock <= 0){
-        alert('Final score: ' + this.score);
+      if(_this.clock <= 0){
+        clearInterval(_this.gameInterval);
+        _this.sendEvent("clock", {time:"Final score: " + _this.score})
       }
+
       
     }
 
@@ -364,6 +368,7 @@ function $GameLogic() {
                     //alert('u did it!')
                     //replaceCards(selects);
                     //resetVars();
+
                     let matchedCardsIndexes = [];
                     _this.selects[playerSelectsIndex].forEach(function(_c,index){
                       let _cardIndex = _this.activeCards.indexOf(_c);
