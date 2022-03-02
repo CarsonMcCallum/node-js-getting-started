@@ -103,17 +103,40 @@ function Game(server,parent,toggleMasterLoadingScreen) {
             }
 
             if(event.name == "start"){
-                _this.shout("positive","Start!")
+               
                 console.log("Start!");
-                gsap.set('.time',{scale:1,opacity:1});
-                gsap.from('.time',{duration:.4,scale:0,opacity:0})
+                gsap.set('.time-box',{scale:1,opacity:1});
+                gsap.from('.time-box',{duration:.4,scale:0,opacity:0})
                 // Set all box widths so they dont change when cards move.
                 let box = tools.getOne('.box:nth-child(1)');
                 gsap.set('.box',{width:box.clientWidth,height:box.clientHeight});
 
-                _this.allowPlayerInput = true;
-                _this.inputMode = "enabled";
-                _this.initateListener();
+                _this.activeCards.forEach(function(card){
+                   // _this.flipCard(card,"front");
+                })
+
+                let tl = new gsap.timeline();
+                tl.add(function(){
+                    _this.activeCards.forEach(function(card,i){
+                        let speedIncrease = i * 50;
+
+                        setTimeout(function(){
+                           // _this.flipCard(card,"front")
+                        }, speedIncrease)
+                        
+                    })
+                });
+                
+                setTimeout(function(){
+                    _this.shout("positive","Start!")
+                },800);
+                setTimeout(function(){
+                    _this.allowPlayerInput = true;
+                    _this.inputMode = "enabled";
+                    _this.initateListener();
+                },1200)
+
+                
             }
 
             
@@ -330,7 +353,7 @@ function Game(server,parent,toggleMasterLoadingScreen) {
                 if(drawQuene > 0){
                     drawQuene--;
                 }
-               
+               _this.flipCard(_getCard,"front")
         }
         // Animate.
         Flip.from(state, {
@@ -352,6 +375,42 @@ function Game(server,parent,toggleMasterLoadingScreen) {
         return card;
     }
 
+    this.flipCard = function(card,side = "front",speed = 1){
+
+        gsap.set(".card", {
+            transformStyle: "preserve-3d",
+            transformPerspective: 10000,
+            transformOrigin:"50% 50%"
+          });
+    
+    let front = card.firstElementChild,
+        back = card.lastElementChild,
+        tl = gsap.timeline({}),
+        flipTime = .2 * speed;
+        
+    tl.to(card,{
+        duration:flipTime,
+        rotationY:90,
+        z:10
+    });
+    tl.add(function(){
+        if(side == "front"){
+             gsap.set(front,{visibility:"visible"});
+             gsap.set(back,{visibility:"hidden"});
+    
+        }else{
+            gsap.set(front,{visibility:"hidden"});
+            gsap.set(back,{visibility:"visible"});
+        }
+        gsap.set(card,{rotationY:-90});
+    });
+    tl.to(card,{duration:flipTime,rotationY:0,scale:1,z:0});
+
+    //var x = document.querySelector('.card');
+    //flipCard(x,"front");
+
+    
+    }
   
     this.createDeck = function () {
 
