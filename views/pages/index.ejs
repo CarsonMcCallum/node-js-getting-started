@@ -58,6 +58,7 @@
     console.log('Excellent, registered with scope: ', registration.scope);
   });
   </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.1/howler.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/Flip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/Draggable.min.js"></script>
@@ -67,6 +68,31 @@
 <script>
   gsap.registerPlugin(CustomEase, CustomWiggle);
   CustomWiggle.create("Wiggle.uniform", {wiggles:6, type:"uniform"});
+
+    var $sfx_click = new Howl({
+      src: ['/sfx/click_3.wav'],
+      volume: 1.0,
+      onend: function () {
+       // alert('We finished with the setup!');
+      }
+    });
+    var $sfx_error = new Howl({
+      src: ['/sfx/click_17.wav'],
+      volume: 1.0,
+      onend: function () {
+       // alert('We finished with the setup!');
+      }
+    });
+
+    var $sfx_success = new Howl({
+      src: ['/sfx/success_one.wav'],
+      volume: 1.0,
+      onend: function () {
+       // alert('We finished with the setup!');
+      }
+    });
+  
+</script>
 </script>
 <script src="/scripts/tools.js"></script>
 <script src="/scripts/game/card-styles.js"></script>

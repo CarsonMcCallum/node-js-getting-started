@@ -72,7 +72,7 @@ function Game(server,parent,toggleMasterLoadingScreen) {
 
 
             if(event.name == "create board"){
-                createBoard();
+                createBoard(event.data.boardLength);
             }
 
             if(event.name == "deal deck"){
@@ -203,7 +203,7 @@ function Game(server,parent,toggleMasterLoadingScreen) {
     }
 
 
-    createBoard = function () {
+    createBoard = function (_boardLength) {
 
         try{
 
@@ -232,6 +232,15 @@ function Game(server,parent,toggleMasterLoadingScreen) {
 
         }catch(e){
             console.log(e)
+        }
+
+        let board = document.querySelector('.board');
+        board.innerHTML = "";
+
+        for(let i = 0; i < _boardLength; i++){
+            let box = '<div class="box" data-box-index="'+i+'"></div>';
+            box = $stringToHTML(box);
+            board.appendChild(box);
         }
 
         _this.sendToServer("ready to start");
@@ -489,6 +498,8 @@ function Game(server,parent,toggleMasterLoadingScreen) {
 
     this.correctMatch = function(pid, indexes){
 
+        $sfx_success.play();
+
         // Get cards and order them by 
         let matchesBoxIndex = 0;
         let delay = .5;
@@ -595,6 +606,7 @@ function Game(server,parent,toggleMasterLoadingScreen) {
     this.selectCard = function(card){
 
         _this.selects.push(card);
+        
 
         if(_this.selects.length >= 3){
             _this.allowPlayerInput = false;
@@ -616,7 +628,7 @@ function Game(server,parent,toggleMasterLoadingScreen) {
             fill:card.dataset.f,
             number:card.dataset.n
         };
-
+        $sfx_click.play();
         card.classList.add('selected');
         gsap.from(card,
             {
@@ -628,7 +640,7 @@ function Game(server,parent,toggleMasterLoadingScreen) {
 
     this.incorrectMatch = function(){
         _this.allowPlayerInput = false;
-
+        $sfx_error.play();
         gsap.from('.card.selected',.5,{
             rotation:10,
             background:"red",

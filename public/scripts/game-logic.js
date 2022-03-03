@@ -58,7 +58,7 @@ function $GameLogic() {
 
         if(this.mode == "practice"){
             // Insert practice mode variables here.
-            this.gameVars.boardLength = 11; // 12 cards.
+            this.gameVars.boardLength = 20; // 12 cards.
             console.log('set practice game vars here...')
         }
     }
@@ -75,7 +75,7 @@ function $GameLogic() {
     }
 
     this.startGame = function(){
-        this.sendEvent("create board")
+        this.sendEvent("create board",{boardLength:_this.gameVars.boardLength})
         this.drawCards();
     }
 
@@ -391,7 +391,7 @@ function $GameLogic() {
                 //Message error!
                     console.log('logic - No Match!'); 
                    _this.selects[playerSelectsIndex].splice(0);
-                   _this.clock-= 30;
+                   _this.clock-= 0;
                    _this.sendEvent("incorrect",{pid:pid});
                 }
 

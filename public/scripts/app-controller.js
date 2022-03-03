@@ -147,6 +147,7 @@ document.addEventListener('click', (event) => {
       if(actionId == "navigate_to_section"){
           let actionTarget =  event.target.dataset.actionTarget;
           navigate(actionTarget);
+          
       }
 
       // Open mode overview. 
