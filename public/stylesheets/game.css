@@ -239,6 +239,7 @@
         min-height: 620;
         overflow: visible;
         height:82vh;
+        justify-content: center;
 }
 
 .board{
@@ -253,6 +254,10 @@
     justify-items: center;
     align-content: space-evenly;
     align-items: center;
+    width: auto;
+    height: auto;
+    align-items: center;
+    gap: 4%;
 }
 .box{
     color: white;

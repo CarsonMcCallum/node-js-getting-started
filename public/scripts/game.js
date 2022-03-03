@@ -498,7 +498,7 @@ function Game(server,parent,toggleMasterLoadingScreen) {
     this.correctMatch = function(pid, indexes){
 
 
-        $sfx_success.play();
+        $sfx_click.play();
        
 
         // Get cards and order them by 
@@ -563,8 +563,8 @@ function Game(server,parent,toggleMasterLoadingScreen) {
         });
 
         setTimeout(function(){
-            //$sfx_success.play();
-        },0)
+            $sfx_success.play();
+        },100)
 
         let tl = new gsap.timeline();
         tl.from('.shout-background-matches',{opacity:0,duration:.5})
