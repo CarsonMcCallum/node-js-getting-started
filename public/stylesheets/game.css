@@ -281,7 +281,7 @@
 .card{
     width: 100px;
     height: 148px;
-    background-color: white;
+
     margin: auto;
     /* position: absolute; */
     left: 0px;
@@ -292,7 +292,7 @@
     /* box-shadow: 0px 0px 2px black inset, 0px -3px 0px #00000040 inset; */
     transform-style: preserve-3d;
     box-shadow: 0px 0px 2px black inset, 0px -5px 0px #00000040 inset, 0px 3px 0px #ffffff inset, 0px 3px 6px #00000040;
-    background: #ececec;
+    background-color: #ececec;
     box-shadow: 0px 0px 2px black inset, 0px -5px 0px #00000040 inset, 0px 3px 0px #ffffff inset, 0px 3px 6px #00000040, 0px 0px 0px 4px #00000047;
 }
 
