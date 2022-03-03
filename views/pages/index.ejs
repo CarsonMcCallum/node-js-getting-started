@@ -69,23 +69,45 @@
   gsap.registerPlugin(CustomEase, CustomWiggle);
   CustomWiggle.create("Wiggle.uniform", {wiggles:6, type:"uniform"});
 
+  var sfx_clickArr = [
+      'click_3.wav',
+      'Pop (6).wav'
+    ];
     var $sfx_click = new Howl({
-      src: ['/sfx/click_3.wav'],
+      src: '/sfx/' + sfx_clickArr[1],
       volume: 1.0,
       onend: function () {
        // alert('We finished with the setup!');
       }
     });
+    var sfx_errorArray = [
+      'click_17.wav',
+      'Buzz Error (13).wav'
+    ];
     var $sfx_error = new Howl({
-      src: ['/sfx/click_17.wav'],
+      src: '/sfx/' + sfx_errorArray[1],
       volume: 1.0,
       onend: function () {
        // alert('We finished with the setup!');
       }
     });
 
+    var $sfx_start = new Howl({
+      src: '/sfx/' + 'Gong (2).wav',
+      volume: 1.0,
+      onend: function () {
+       // alert('We finished with the setup!');
+      }
+    });
+
+
+    var sfx_successArr = [
+      'Special & Powerup (38).wav',
+      'Special & Powerup (1).wav'
+    ];
+
     var $sfx_success = new Howl({
-      src: ['/sfx/success_one.wav'],
+      src: '/sfx/' + sfx_successArr[0],
       volume: 1.0,
       onend: function () {
        // alert('We finished with the setup!');
@@ -95,6 +117,8 @@
 </script>
 </script>
 <script src="/scripts/tools.js"></script>
+<script src="/scripts/effect-methods.js"></script>
+<script src="/scripts/effects.js"></script>
 <script src="/scripts/game/card-styles.js"></script>
 <script src="/scripts/game/card-methods.js"></script>
 <script src="/scripts/game.js"></script>

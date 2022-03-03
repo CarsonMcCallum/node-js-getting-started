@@ -2,11 +2,7 @@
 // https://github.com/mdn/js-examples/blob/master/modules/dynamic-module-imports/modules/canvas.js
 
 // Helpers.
-var $stringToHTML = function (str) {
-    var parser = new DOMParser();
-    var doc = parser.parseFromString(str, 'text/html');
-    return doc.body.firstChild;
-};
+
 
 
 var failText = [
@@ -90,6 +86,7 @@ function Game(server,parent,toggleMasterLoadingScreen) {
             }
 
             if(event.name == "draw card"){
+
                 console.log('game.js','start draw card ------')
                 if("card" in event.data){
                     //console.log('card exists,', event.data)
@@ -105,6 +102,7 @@ function Game(server,parent,toggleMasterLoadingScreen) {
             if(event.name == "start"){
                
                 console.log("Start!");
+                $sfx_start.play();
                 gsap.set('.time-box',{scale:1,opacity:1});
                 gsap.from('.time-box',{duration:.4,scale:0,opacity:0})
                 // Set all box widths so they dont change when cards move.
@@ -239,7 +237,7 @@ function Game(server,parent,toggleMasterLoadingScreen) {
 
         for(let i = 0; i < _boardLength; i++){
             let box = '<div class="box" data-box-index="'+i+'"></div>';
-            box = $stringToHTML(box);
+            box = tools.stringToHTML(box);
             board.appendChild(box);
         }
 
@@ -316,7 +314,7 @@ function Game(server,parent,toggleMasterLoadingScreen) {
         
 
         let newCard = $Card(index, cardId,shape,color,fill,number,_graphicArr);
-        newCard = $stringToHTML(newCard); // Make string into node.
+        newCard = tools.stringToHTML(newCard); // Make string into node.
         
 
         return newCard;
@@ -498,28 +496,32 @@ function Game(server,parent,toggleMasterLoadingScreen) {
 
     this.correctMatch = function(pid, indexes){
 
-        $sfx_success.play();
+       
 
         // Get cards and order them by 
         let matchesBoxIndex = 0;
-        let delay = .5;
+        let delay = .3;
         
         indexes.forEach(function(i,index){
+
+        
            
             let correctCard = _this.activeCards[i];
             correctCard.classList.remove('selected');
+            
+            $effects.floatingPoints(20, correctCard,"top center");
 
             let tl = new gsap.timeline();
             gsap.set(correctCard,{clearProps:"all"})
-            gsap.killTweensOf(correctCard)
-
+            gsap.killTweensOf(correctCard);
+            $sfx_success.play();
             tl.fromTo(correctCard,
                 {
-                    duration:.4,
+                    duration:.3,
                     backgroundColor:"#81c784"
                 },{
                     scale:1.1,
-                    duration:.5,
+                    duration:.2,
                     background:"white",
                     //ease:"back.in(1.7)"
                 }
@@ -551,14 +553,15 @@ function Game(server,parent,toggleMasterLoadingScreen) {
             // Animate.
             Flip.from(state, {
                     // Optional properties related to HOW it's transitioned
-                    duration: .5,
+                    duration: .3,
                     scale:1,
                     ease: "expo.inOut"
                 });
-
-                
-
         });
+
+        setTimeout(function(){
+            //$sfx_success.play();
+        },100)
 
         let tl = new gsap.timeline();
         tl.from('.shout-background-matches',{opacity:0,duration:.5})
@@ -607,6 +610,7 @@ function Game(server,parent,toggleMasterLoadingScreen) {
 
         _this.selects.push(card);
         
+        $effects.floatingPoints(50, card,"top center");
 
         if(_this.selects.length >= 3){
             _this.allowPlayerInput = false;
@@ -622,25 +626,28 @@ function Game(server,parent,toggleMasterLoadingScreen) {
            // $(this).removeClass("selected");
         }
         
-        let cardValues = {
-            shape:card.dataset.s,
-            color:card.dataset.c,
-            fill:card.dataset.f,
-            number:card.dataset.n
-        };
         $sfx_click.play();
-        card.classList.add('selected');
-        gsap.from(card,
-            {
-           scale:.9,
-           ease:"back.out(1.7)"
+
+       
+        gsap.fromTo(card,
+            {   
+                duration:.1,
+                scale:.9,
+            },
+            {   duration:.25,
+                scale:1.06,
+                ease:"elastic.out(1.5, 0.5)"
             }
         );
+        card.classList.add('selected'); 
+
+
     }
 
     this.incorrectMatch = function(){
         _this.allowPlayerInput = false;
         $sfx_error.play();
+        gsap.set('.card.selected', {clearProps:"background"})
         gsap.from('.card.selected',.5,{
             rotation:10,
             background:"red",
@@ -652,14 +659,21 @@ function Game(server,parent,toggleMasterLoadingScreen) {
 
         _this.selects.forEach(function(elem){
             elem.classList.remove('selected');
+            let tl = gsap.timeline();
+            tl.to(elem,{
+                duration:.3,
+                scale:1,
+                ease:"back.in(1.7)",
+                clearProps:"background"})
+            gsap.set(elem,{clearProps:"background"});
             elem.dataset.selected = "false";
         });
         _this.selects.splice(0);
 
         let cards = tools.getAll('.cards');
         cards.forEach(function(c){
-            tools.removeClass('.cards.selected')
-        })
+            tools.removeClass(c,'selected')
+        });
     }
 
     this.initateListener = function(){
@@ -676,9 +690,9 @@ function Game(server,parent,toggleMasterLoadingScreen) {
 
 
         // Handle click events. 
-        game.addEventListener('click', (event) => {
+        game.addEventListener('mousedown', (event) => {
             //let trackId = false; 
-            console.log('click',event.target)
+            console.log('game iput',event.target)
             console.log('click',event.target.dataset)
             
             if(playerActionList.includes(event.target.dataset.playerActionId)) {

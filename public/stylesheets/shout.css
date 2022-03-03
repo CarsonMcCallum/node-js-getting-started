@@ -36,6 +36,7 @@ width: 100%;
     background: #00ffa4;
     height: 320px;
     top: calc(50% - 160px);
+    background: #1f1f1f5c;
 }
 .shout-inner{
     position: relative;
