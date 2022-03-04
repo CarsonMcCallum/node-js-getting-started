@@ -40,6 +40,15 @@ width: 100%;
     top: 0px;
     height: 100%;
 }
+
+.beams{
+    position: absolute;
+    left: -10%;
+    right: 0px;
+    max-width: 120%;
+    top: 10%;
+    transform: scale(1.5);
+}
 .shout-inner{
     position: relative;
     top:0px;

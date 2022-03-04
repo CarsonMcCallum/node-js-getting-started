@@ -143,7 +143,9 @@ function Game(server,parent,toggleMasterLoadingScreen) {
                         c.classList.remove('selected');
                     })
 
-                    _this.correctMatch(event.data.pid,event.data.indexes);
+                    setTimeout(function(){
+                        _this.correctMatch(event.data.pid,event.data.indexes);
+                    },200)
             }
 
             if(event.name == "incorrect"){
@@ -360,12 +362,20 @@ function Game(server,parent,toggleMasterLoadingScreen) {
                 }
                _this.flipCard(_getCard,"front")
         }
+
+        function sfx(){
+            if(drawIncrement % 2 == 0) {
+                $sfx_card_slide.play();
+            }
+            $sfx_card_slide.play();
+        }
         // Animate.
         Flip.from(state, {
             // Optional properties related to HOW it's transitioned
             duration: 1,
             delay:drawQuene * drawIncrement,
             ease: "power4.out",
+            onStart:sfx,
             onComplete:drecreaseDrawQuene
         });
 
@@ -505,6 +515,8 @@ function Game(server,parent,toggleMasterLoadingScreen) {
         // Get cards and order them by 
         let matchesBoxIndex = 0;
         let delay = .3;
+
+        $sfx_success.play();
         
         indexes.forEach(function(i,index){
 
@@ -564,13 +576,13 @@ function Game(server,parent,toggleMasterLoadingScreen) {
         });
 
         setTimeout(function(){
-            $sfx_success.play();
+            //$sfx_success.play();
         },100)
 
         let tl = new gsap.timeline();
         tl.from('.shout-background-matches',{opacity:0,duration:.5})
         tl.from('.shout-text',{duration:.5,delay:1,opacity:0,yPercent:20,ease:"back.out(1.7)"},"-=1");
-        
+        gsap.from('.beams',{duration:1,rotation:100,scale:.4,ease:"back.out(1.7)"})
       
 
         setTimeout(function(){
@@ -598,6 +610,7 @@ function Game(server,parent,toggleMasterLoadingScreen) {
             tools.addClass('.shout','hidden');
             gsap.set('.shout-text',{clearProps:"all"});
             gsap.set('.shout-background-matches',{clearProps:"all"});
+           
             gsap.set('.matches-box',{clearProps:"all"});
             _this.allowPlayerInput = true;
         }},"-=.4")
@@ -608,7 +621,7 @@ function Game(server,parent,toggleMasterLoadingScreen) {
         // Wiggle params are set in index.ejs
         console.log('cardHint')
         let cards = document.querySelectorAll('.card');
-        gsap.to(cards[cardIndex], {duration:2,rotation:20, ease:"Wiggle.uniform"})
+        gsap.to(cards[cardIndex], {duration:2, rotation:20, ease:"Wiggle.uniform"})
     }
 
     this.selectCard = function(card){
@@ -670,11 +683,14 @@ function Game(server,parent,toggleMasterLoadingScreen) {
         gsap.from(sCardsTiles,.5,{
             backgroundColor:"#ff2323",
         });
+
+
+        gsap.set(sCards,{backgroundColor:"#ff2323"})
         
-        gsap.from(sCards,.5,{
+        gsap.to(sCards,.5,{
             rotation:10,
-            background:"#ff2323",
-            ease:"back.out(1.7)",
+            clearProps:"backgroundColor",
+            ease:"Wiggle.uniform",
             onComplete:function(){
                 _this.allowPlayerInput = true;
             }
@@ -685,6 +701,7 @@ function Game(server,parent,toggleMasterLoadingScreen) {
             let tl = gsap.timeline();
             tl.to(elem,{
                 duration:.3,
+                rotation:0,
                 scale:1,
                 ease:"back.in(1.7)",
                 backgroundColor:"#ececec"
@@ -717,7 +734,7 @@ function Game(server,parent,toggleMasterLoadingScreen) {
 
 
         // Handle click events. 
-        game.addEventListener('mousedown', (event) => {
+        game.addEventListener('touchstart', (event) => {
             //let trackId = false; 
             console.log('game iput',event.target)
             console.log('click',event.target.dataset)
