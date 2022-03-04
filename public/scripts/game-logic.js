@@ -9,8 +9,8 @@ function $GameLogic() {
         gameLength:120,
         hints:{
           allowed:true,
-          interval:15, // Show hint every X seconds.
-          max:9
+          interval:10, // Show hint every X seconds.
+          max:100
         }
       };
       this.players = null;

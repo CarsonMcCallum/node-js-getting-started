@@ -67,6 +67,37 @@ function Effects(){
     }
 
 
+    this.incorrectEffect = function(){
+
+        let incorrectEffectText = $EffectMethods.incorrectEffectText();
+        let incorrectEffectTextGlow = $EffectMethods.incorrectEffectTextGlow();
+
+        _this.parent.appendChild(incorrectEffectText);
+        _this.parent.appendChild(incorrectEffectTextGlow);
+
+        
+  
+        gsap.set(incorrectEffectText,_this.animations.smallFadeInOut.start);
+        gsap.set(incorrectEffectTextGlow,_this.animations.smallFadeInOut.start);
+
+
+        let tl = gsap.timeline({onComplete:function(){
+            _this.remove(effectElement);
+        }});
+
+        let inAnim = _this.animations.smallFadeInOut.in;
+        inAnim.duration = .5;
+        tl.to(incorrectEffectText,inAnim);
+        tl.to(incorrectEffectTextGlow,inAnim,"-=.5")
+
+        let outAnim = _this.animations.smallFadeInOut.out;
+        outAnim.duration = .3;
+        tl.to(incorrectEffectText, outAnim);
+        tl.to(incorrectEffectTextGlow,outAnim,"-=.3");
+
+    }
+
+
     this.floatingPoints = function(_number,_child,_position = "top center",_effectType = "default"){
     
         console.log('floatingPoints',_number,_child,_position,_effectType);

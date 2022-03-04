@@ -137,7 +137,13 @@ function Game(server,parent,toggleMasterLoadingScreen) {
                 console.log('player',event.data.pid);
                 console.log('matching card indexes',event.data.indexes);
                 _this.allowPlayerInput = false;
-                _this.correctMatch(event.data.pid,event.data.indexes);
+
+                    let selected = document.querySelectorAll('.card.selected');
+                    selected.forEach(function(c){
+                        c.classList.remove('selected');
+                    })
+
+                    _this.correctMatch(event.data.pid,event.data.indexes);
             }
 
             if(event.name == "incorrect"){
@@ -492,7 +498,8 @@ function Game(server,parent,toggleMasterLoadingScreen) {
     this.correctMatch = function(pid, indexes){
 
 
-        $sfx_click.play();
+        //$sfx_click.play();
+
        
 
         // Get cards and order them by 
@@ -611,6 +618,7 @@ function Game(server,parent,toggleMasterLoadingScreen) {
         //$effects.floatingPoints(50, card,"top center");
 
         $sfx_click.play();
+        
 
         if(_this.selects.length >= 3){
             _this.allowPlayerInput = false;
@@ -622,6 +630,7 @@ function Game(server,parent,toggleMasterLoadingScreen) {
 
             
          } else if(_this.selects.length<3) {
+             
             //_this.selects.splice(_this.selects.indexOf(card),1);
            // $(this).removeClass("selected");
         }
@@ -650,14 +659,21 @@ function Game(server,parent,toggleMasterLoadingScreen) {
         $sfx_error.play();
 
         let sCards = tools.getAll('.card.selected');
+        let sCardsTiles = tools.getAll('.card.selected .card-tile');
+
+        $effects.incorrectEffect();
 
         sCards.forEach(function(c){
             c.classList.remove('selected');
         })
+
+        gsap.from(sCardsTiles,.5,{
+            backgroundColor:"#ff2323",
+        });
         
         gsap.from(sCards,.5,{
             rotation:10,
-            background:"red",
+            background:"#ff2323",
             ease:"back.out(1.7)",
             onComplete:function(){
                 _this.allowPlayerInput = true;
@@ -713,14 +729,16 @@ function Game(server,parent,toggleMasterLoadingScreen) {
                 
             
                 if(playerActionId == "touch_card"){
-                    _this.sendToServer("touch_card",{boardIndex:event.target.dataset.index});
+                    
                     console.log('touch_card...',event.target.dataset.index)
                     //let actionTarget =  event.target.dataset.actionTarget;
                     //navigate(actionTarget);
                     if(_this.allowPlayerInput){
                         if(event.target.dataset.selected == "false"){
                             event.target.dataset.selected = "true";
-                           _this.selectCard(event.target);
+                            _this.selectCard(event.target);
+
+                            _this.sendToServer("touch_card",{boardIndex:event.target.dataset.index});
                            console.log('click card');
                         }
                     }

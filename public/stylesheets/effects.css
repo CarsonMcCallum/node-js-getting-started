@@ -5,10 +5,33 @@
 
 .points{
     font-family: 'Lilita One', cursive;
-    font-size: 1.1rem;
+    font-size: 1.4rem;
 }
 
 .default{
-    color:white;
+    color:#ffe00d;
 }
 
+.incorrect{
+    font-family: "Lilita One";
+    color: rgb(234, 38, 66);
+    text-transform: uppercase;
+    position: absolute;
+    bottom: 10%;
+    left: 0px;
+    right: 0px;
+    margin: auto;
+    text-align: center;
+    width: fit-content;
+    font-size: 1.3rem;
+}
+
+.incorrect-glow{
+    position: absolute;
+    height: 160px;
+    margin: auto;
+    bottom: 1%;
+    border-radius: 70px;
+    left: 0px;
+    right: 0px;
+}
