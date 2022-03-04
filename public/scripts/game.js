@@ -37,26 +37,20 @@ function Game(server,parent,toggleMasterLoadingScreen) {
       this.clock = null;
 
       //_game = this;
-      
-
-     
-      
-      
+    
       // Helper funcitons.
       this.shuffleArray = arr => arr.sort(() => Math.random() - 0.5)
 
 
 
-    this.ready = function () {
-        _this.server.ready();
-    }
+        this.ready = function () {
+            _this.server.ready();
+        }
 
     
 
 
     parseEvent = function (event) {
-
-
 
         if(event.name == "clock"){
             gsap.set('.time',{text:event.data.time});
@@ -64,40 +58,39 @@ function Game(server,parent,toggleMasterLoadingScreen) {
             return true;
         }
 
-        console.log('parseEvent')
+            console.log('parseEvent')
 
 
-            if(event.name == "create board"){
-                createBoard(event.data.boardLength);
-            }
+        if(event.name == "create board"){
+            createBoard(event.data.boardLength);
+        }
 
-            if(event.name == "deal deck"){
-                console.log('game.js','deal deck')
-                _this.createDeck();
-                _this.shuffleArray(_this.deck);
-                console.log(_this.deck)
+        if(event.name == "deal deck"){
+            console.log('game.js','deal deck')
+            _this.createDeck();
+            _this.shuffleArray(_this.deck);
+            console.log(_this.deck)
 
-               for(let i = 0; i <= 11; i++){
-                    let nextCard = _this.getNextCard();
-                    console.log('nextCard',nextCard)
-                    let card = _this.createCard(i, nextCard);
-                    _this.drawCard(card,i);
-                 }
-            }
-
-            if(event.name == "draw card"){
-
-                console.log('game.js','start draw card ------')
-                if("card" in event.data){
-                    //console.log('card exists,', event.data)
-                    let card = _this.createCard(event.data.index,event.data.card);
-                    //console.log(card);
-                    _this.activeCards[event.data.index] = card;
-                    _this.drawCard(card,event.data.index)
+            for(let i = 0; i <= 11; i++){
+                let nextCard = _this.getNextCard();
+                console.log('nextCard',nextCard)
+                let card = _this.createCard(i, nextCard);
+                _this.drawCard(card,i);
                 }
+        }
+
+        if(event.name == "draw card"){
+            console.log('game.js','start draw card ------')
+            if("card" in event.data){
+                //console.log('card exists,', event.data)
+                let card = _this.createCard(event.data.index,event.data.card);
+                //console.log(card);
+                _this.activeCards[event.data.index] = card;
+                _this.drawCard(card,event.data.index)
+            }
 
                 console.log('game.js','end draw card ------')
-            }
+        }
 
             if(event.name == "start"){
                
@@ -160,7 +153,6 @@ function Game(server,parent,toggleMasterLoadingScreen) {
             if(event.name == "no matches"){
 
                 _this.shout("negative","Shuffle!");
-
                 gsap.to('.card',{duration:1,scale:0,onComplete:function(){
                     let boxes = tools.getAll('.box');
                     boxes.forEach(function(box){
@@ -211,8 +203,7 @@ function Game(server,parent,toggleMasterLoadingScreen) {
         gameBoard.classList.add("board","level-one");
 
         //console.log('elem',this.parent)
-       // parent.appendChild(gameBoard);
-
+        // parent.appendChild(gameBoard);
 
         let allSections = document.querySelectorAll('section');
         
@@ -391,10 +382,13 @@ function Game(server,parent,toggleMasterLoadingScreen) {
             transformOrigin:"50% 50%"
           });
     
+          
     let front = card.firstElementChild,
         back = card.lastElementChild,
         tl = gsap.timeline({}),
         flipTime = .2 * speed;
+
+
         
     tl.to(card,{
         duration:flipTime,
@@ -403,7 +397,7 @@ function Game(server,parent,toggleMasterLoadingScreen) {
     });
     tl.add(function(){
         if(side == "front"){
-             gsap.set(front,{visibility:"visible"});
+             gsap.set(front,{visibility:"visible",overflow:"visible"});
              gsap.set(back,{visibility:"hidden"});
     
         }else{
@@ -743,7 +737,7 @@ function Game(server,parent,toggleMasterLoadingScreen) {
 
     this.shout = function(name,text){
         let tl = new gsap.timeline();
-        gsap.set('.shout-effect-text',{text:text});
+       gsap.set('.shout-effect-text',{text:text});
         tools.removeClass('.shout-effect','hidden');
 
         if(name == "positive"){

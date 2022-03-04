@@ -38,6 +38,8 @@ function Tools(){
         return arr[Math.floor(Math.random()*arr.length)];
     }
 
+
+
     this.stringToHTML = function (str) {
         var parser = new DOMParser();
         var doc = parser.parseFromString(str, 'text/html');

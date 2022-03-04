@@ -31,15 +31,21 @@
 
     var $Card = function(index, cardId,s,c,f,n, graphic = []){
         let _c = '<div id="'+cardId+'" data-index="'+index+'" data-player-action-id="touch_card" data-selected="false" class="card small show-front" data-s="'+s+'" data-c="'+c+'" data-f="'+f+'" data-n="'+n+'">';
+         
             _c+=    '<div class="front">';
-              
-                    for(let i = 0; i < graphic.length;i++){
-                        _c+= '<div class="graphic">';
-                        _c += graphic[i];
-                        _c+= '</div>';
-                    }
+                _c+=   '<div class="card-bg">';
+                    _c+= '<div class="card-tile"></div>';
+                _c+=   '<div class="card-graphics">';
+                        for(let i = 0; i < graphic.length;i++){
+                            _c+= '<div class="graphic">';
+                            _c += graphic[i];
+                            _c+= '</div>';
+                        }
+                        _c+= '</div>';// End card-graphics.
+                    _c+= '</div>';// End card-bg.
             _c+=   '</div>';
             _c+=  '<div class="back"></div>';
+     
             _c+= '</div>';
         return _c;
     }
