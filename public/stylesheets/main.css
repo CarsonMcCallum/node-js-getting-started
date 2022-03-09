@@ -86,6 +86,16 @@ section{
 }
 
 
+.overlay-screen{
+  background-color: #000000e0;
+  color: white;
+}
+.blue {
+  color:rgb(34, 155, 255);
+}
+.orange {
+  color:#f60;
+}
 
 /* Flex classes 
 Guide: https://primer.style/css/utilities/flexbox

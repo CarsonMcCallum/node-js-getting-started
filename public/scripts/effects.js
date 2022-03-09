@@ -82,7 +82,8 @@ function Effects(){
 
 
         let tl = gsap.timeline({onComplete:function(){
-            _this.remove(effectElement);
+            _this.remove(incorrectEffectText);
+            _this.remove(incorrectEffectTextGlow);
         }});
 
         let inAnim = _this.animations.smallFadeInOut.in;
@@ -137,6 +138,73 @@ function Effects(){
 
         return true;
 
+    }
+
+
+
+    this.countUp = function(identifier, {duration = 2000, text = false, callback = false} = {}){
+
+        // https://jshakespeare.com/simple-count-up-number-animation-javascript-react/
+
+        //if(!identifier) return false;
+
+        const animationDuration = duration;
+
+        // Calculate how long each ‘frame’ should last if we want to update the animation 60 times per second
+        const frameDuration = 1000 / 60;
+        // Use that to calculate how many frames we need to complete the animation
+        const totalFrames = Math.round( animationDuration / frameDuration );
+        // An ease-out function that slows the count as it progresses
+        // Eases here:
+        const easeOutQuad = t => 1+(--t)*t*t*t*t;
+
+        // Format number with comma
+        function formatNumber(num) {
+            return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,')
+          }
+        
+        // The animation function, which takes an Element
+        const animateCountUp = el => {
+            let frame = 0;
+            const countTo = parseInt( el.innerHTML, 10 );
+            // Start the animation running 60 times per second
+            const counter = setInterval( () => {
+                frame++;
+                // Calculate our progress as a value between 0 and 1
+                // Pass that value to our easing function to get our
+                // progress on a curve
+                const progress = easeOutQuad( frame / totalFrames );
+                // Use the progress value to calculate the current count
+                const currentCount = Math.round( countTo * progress );
+        
+                // If the current count has changed, update the element
+                if ( parseInt( el.innerHTML, 10 ) !== currentCount ) {
+                    el.innerHTML = formatNumber(currentCount);
+                }
+        
+                // If we’ve reached our last frame, stop the animation
+                if ( frame === totalFrames ) {
+                    if(callback){
+                        console.log('countup callback');
+                        callback();
+                    }
+                    clearInterval( counter );
+                }
+            }, frameDuration );
+        };
+        
+        // Run the animation on all elements with a class of ‘countup’
+        const runAnimations = () => {
+            const countupEls = document.querySelectorAll(identifier);
+            countupEls.forEach( animateCountUp );
+        };
+        
+        if(text){
+            console.log('countUp set text', text);
+            gsap.set(identifier,{text:text});
+        }
+
+        runAnimations();
     }
 }
 

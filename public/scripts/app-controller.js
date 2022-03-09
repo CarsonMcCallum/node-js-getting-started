@@ -128,17 +128,23 @@ const actionList = [
     'expand_mode_overview',
     'close_mode_overview',
     'load_open_mode',
-    'cancel_load_mode'
+    'cancel_load_mode',
+    'game_over_action'
     // ...
   ];
   
 
 // Handle click events. 
-document.addEventListener('click', (event) => {
+document.addEventListener('touchstart', (event) => {
     //let trackId = false; 
     console.log('click',event.target.dataset.actionId)
+
+    if(event.target.dataset.audioId){
+        $audio.parseAudioId(event.target.dataset.audioId)
+    }
+
     
-    if(actionList.includes(event.target.dataset.actionId)) {
+    if(actionList.includes(event.target.dataset.actionId)){
 
       let actionId = event.target.dataset.actionId;
       console.log('actionList item clicked', actionId);
@@ -147,7 +153,6 @@ document.addEventListener('click', (event) => {
       if(actionId == "navigate_to_section"){
           let actionTarget =  event.target.dataset.actionTarget;
           navigate(actionTarget);
-          
       }
 
       // Open mode overview. 
@@ -170,9 +175,17 @@ document.addEventListener('click', (event) => {
           cancelLoadOpenGameMode();
       }
 
-    
-    }
+      if(actionId == "game_over_action"){
+        let target = event.target.dataset.target;
 
+            if(target == "return_to_home"){
+                returnToHomeScreen();
+            }
+               
+      }
+
+
+    }
 });
 
 
@@ -185,12 +198,14 @@ function loadOpenGameMode(){
 
     // Simulate establish connection.
     loadModeTimeout = setTimeout(function(){
+
         toggleMasterLoadingScreen(true,function(){
             //navigate("game");
             connectToServer();
            
         });
-    },1000);
+
+    },2000);
 
 }
 
@@ -232,3 +247,96 @@ function connectToServer(){
     
 }
 
+
+function hideSections(sectionNamesAsArray){
+    try{
+        for(let i = 0; i < sectionNamesAsArray.length;i++){
+            try{
+            let _section = document.querySelector('section[data-section="'+sectionNamesAsArray[i]+'"]');
+            _section.classList.add('hidden');
+            }catch(e){
+                console.log(e)
+            }
+        }
+    }
+    catch(e){
+        console.log(e)
+    }
+}
+function showSections(sectionNamesAsArray){
+    try{
+        for(let i = 0; i < sectionNamesAsArray.length;i++){
+            try{
+            let _section = document.querySelector('section[data-section="'+sectionNamesAsArray[i]+'"]');
+            _section.classList.remove('hidden');
+            }catch(e){
+                console.log(e)
+            }
+        }
+    }
+    catch(e){
+        console.log(e)
+    }
+}
+
+function loadGameScreen(){
+        let allSections = document.querySelectorAll('section');
+        
+        allSections.forEach(function(section){
+            section.classList.add('hidden');
+        });
+
+        let loadingOverlay = document.querySelector('#master-loading-screen');
+        loadingOverlay.classList.remove('hidden');
+
+        let gameScreen = document.querySelector('#game');
+        gameScreen.classList.remove('hidden');
+
+}
+
+function hideAllSecitonsExceptMasterLoading(){
+
+    let allSections = document.querySelectorAll('section');
+    allSections.forEach(function(section){
+        section.classList.add('hidden');
+    });
+
+    let loadingOverlay = document.querySelector('#master-loading-screen');
+    loadingOverlay.classList.remove('hidden');
+}
+
+function hideGameScreen(){
+
+
+    hideAllSecitonsExceptMasterLoading();
+
+
+    showSections(['home','mode-overview-screen','splash']);
+
+
+}
+
+
+function destroyGame(){
+    console.log('destroyGame...')
+    $Game.reset();
+    $Game = null;
+    gameServer = null;
+}
+
+
+function returnToHomeScreen(){
+
+    toggleMasterLoadingScreen(true,function(){
+        //navigate("game");
+       // connectToServer();
+       
+       destroyGame();
+       hideGameScreen();
+       toggleMasterLoadingScreen(false);
+       ModeOverview.hideCancelButton();
+       ModeOverview.showModeActions();
+        
+
+    });
+}

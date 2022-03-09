@@ -6,7 +6,7 @@ function $GameLogic() {
       this.mode = null;
       this.gameVars = {
         boardLength:null,
-        gameLength:120,
+        gameLength:60,
         hints:{
           allowed:true,
           interval:10, // Show hint every X seconds.
@@ -18,6 +18,7 @@ function $GameLogic() {
       this.serverEvent = null;
       this.deck = [];
       this.score = 0;
+      this.points = 0;
       this.activeCards = [];
       this.usedCards = [];
       this.selects = [];
@@ -117,10 +118,9 @@ function $GameLogic() {
 
       if(_this.clock <= 0){
         clearInterval(_this.gameInterval);
-        _this.sendEvent("game over",{score:"Final score: " + _this.score})
-        _this.sendEvent("clock", {time:"Final score: " + _this.score})
+        _this.sendEvent("game over",{finalScore:{matchesFound:_this.score,points:_this.points}})
+        _this.sendEvent("clock", {time:"0:00"})
       }
-
       
     }
 
@@ -362,6 +362,8 @@ function $GameLogic() {
                   _this.timeSinceLastHint = 0;
 
                   _this.score++;
+
+                  _this.points+= 60;
 
                   _this.clock+= 10; // Add 30 seconds.
 

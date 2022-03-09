@@ -35,6 +35,7 @@ function Game(server,parent,toggleMasterLoadingScreen) {
       this.clockElem = null;
       const _this = this;
       this.clock = null;
+      this.gameOverScreen = tools.getOne('#game-over-screen');
 
       //_game = this;
     
@@ -46,6 +47,28 @@ function Game(server,parent,toggleMasterLoadingScreen) {
         this.ready = function () {
             _this.server.ready();
         }
+
+        // Reset game.
+        this.reset = function(){
+            this.emptyBoard();
+            this.hideTimer();
+            this.mode = null;
+            this.rules = null;
+            this.players = null;
+            this.playerId = "p1"; 
+            this.server = server;
+            this.toggleMasterLoadingScreen = toggleMasterLoadingScreen;
+            this.parent = parent;
+            this.deck = [];
+            this.activeCards = [];
+            this.selects = [];
+            this.allowPlayerInput = false;
+            this.inputMode = "standby"; // Game input modes: standby->active->matching->disabled
+            this.clockElem = null;
+            this.clock = null;
+            this.gameOverScreen = tools.getOne('#game-over-screen');
+        }
+
 
     
 
@@ -96,6 +119,9 @@ function Game(server,parent,toggleMasterLoadingScreen) {
                
                 console.log("Start!");
                 
+                
+
+                tools.removeClass('.time-box','hidden');
                 gsap.set('.time-box',{scale:1,opacity:1});
                 gsap.from('.time-box',{duration:.4,scale:0,opacity:0})
                 // Set all box widths so they dont change when cards move.
@@ -120,13 +146,27 @@ function Game(server,parent,toggleMasterLoadingScreen) {
                 
                 setTimeout(function(){
                     _this.shout("positive","Start!")
-                    $sfx_start.play();
-                },800);
+                    
+
+                    $audio.sfx("start");
+                    $audio.setMusic(0);
+
+                    $audio.music({
+                        type:"play",
+                        fade:true,
+                        duration:8000});
+
+                       /* $gameMusic.play();
+                        $gameMusic.fade(0,0.6,2000);
+                       */
+
+                },1000);
+
                 setTimeout(function(){
                     _this.allowPlayerInput = true;
                     _this.inputMode = "enabled";
                     _this.initateListener();
-                },1200)
+                },1200);
 
                 
             }
@@ -171,8 +211,9 @@ function Game(server,parent,toggleMasterLoadingScreen) {
             }
 
             if(event.name == "game over"){
-                _this.shout("negative","Game over!");
+               // _this.shout("negative","Game over!");
                 _this.allowPlayerInput = false;
+                _this.gameOver(event.data.finalScore);
                // setTimeout(_this.shout("positive",event.data.score),3000)
             }
     }
@@ -213,18 +254,7 @@ function Game(server,parent,toggleMasterLoadingScreen) {
         //console.log('elem',this.parent)
         // parent.appendChild(gameBoard);
 
-        let allSections = document.querySelectorAll('section');
-        
-        allSections.forEach(function(section){
-            section.classList.add('hidden');
-        });
-
-        let loadingOverlay = document.querySelector('#master-loading-screen');
-        loadingOverlay.classList.remove('hidden');
-
-        let gameScreen = document.querySelector('#game');
-        gameScreen.classList.remove('hidden');
-
+        loadGameScreen(); // app-controller.js
         
         this.clockElem = document.querySelector('.time');
 
@@ -243,7 +273,9 @@ function Game(server,parent,toggleMasterLoadingScreen) {
 
         _this.sendToServer("ready to start");
         
-        this.toggleMasterLoadingScreen(false);
+        this.toggleMasterLoadingScreen(false,function(){
+            $audio.sfx("start intro");
+        });
         
     }
 
@@ -365,9 +397,9 @@ function Game(server,parent,toggleMasterLoadingScreen) {
 
         function sfx(){
             if(drawIncrement % 2 == 0) {
-                $sfx_card_slide.play();
+                //$sfx_card_slide.play();
             }
-            $sfx_card_slide.play();
+            //$sfx_card_slide.play();
         }
         // Animate.
         Flip.from(state, {
@@ -629,8 +661,7 @@ function Game(server,parent,toggleMasterLoadingScreen) {
         _this.selects.push(card);
         
         //$effects.floatingPoints(50, card,"top center");
-
-        $sfx_click.play();
+        $audio.sfx('select card');
         
 
         if(_this.selects.length >= 3){
@@ -669,7 +700,7 @@ function Game(server,parent,toggleMasterLoadingScreen) {
 
     this.incorrectMatch = function(){
         _this.allowPlayerInput = false;
-        $sfx_error.play();
+        $audio.sfx("incorrect");
 
         let sCards = tools.getAll('.card.selected');
         let sCardsTiles = tools.getAll('.card.selected .card-tile');
@@ -813,6 +844,98 @@ function Game(server,parent,toggleMasterLoadingScreen) {
       }
     }
 
+
+    this.gameOver = function(finalScore){
+        this.allowPlayerInput = false;
+        _this.gameOverScreen.classList.remove('hidden');
+
+        $audio.music({type:"pause",
+        fade:true,
+        endVolume:0,
+        duration:1000
+        });
+
+        $audio.sfx("finish");
+
+        let tl = gsap.timeline({});
+
+        tl.from(_this.gameOverScreen,{
+            duration:.3,
+            opacity:0
+        });
+        tl.from('#game-over-screen-title',{
+            duration:.5,
+            delay:.75,
+            y:300,
+            scale:2,
+            ease:"expo.out(1.5)"
+        });
+        tl.from('.score',{duration:.5,opacity:0});
+        tl.to('#game-over-screen-title',{text:"Results:"});
+        /*
+        tl.to('#game-matches-found', {duration: 1, scrambleText:{
+            text:String(finalScore.matchesFound), 
+            chars:"0123456789", 
+            revealDelay:0, 
+            speed:0.7,
+            newClass:"orange"}
+        });
+
+        tl.to('#game-final-points', {duration: 1, scrambleText:{
+            text:String(finalScore.points), 
+            chars:"0123456789", 
+            revealDelay:0, 
+            speed:0.7, 
+            newClass:"blue"}
+        });
+        */
+       //gsap.set('#game-matches-found',{text:finalScore.matchesFound})
+
+      // gsap.set('#game-final-points',{text:finalScore.points})
+
+   
+       //tl.pause();
+       function showFinalMatches(){
+            $effects.countUp('#game-matches-found',{text:finalScore.matchesFound});
+       }
+       function showFinalPoints(){
+             $audio.sfx("count up");
+             $effects.countUp('#game-final-points',{duration:3000,text:finalScore.points});
+       }
+       tl.add(gsap.delayedCall(0,showFinalMatches));
+       tl.add(gsap.delayedCall(2,showFinalPoints))
+
+       /*
+       gsap.delayedCall(3,function(){
+           $effects.countUp('#game-matches-found',{text:finalScore.matchesFound});
+       });
+       gsap.delayedCall(6,function(){
+           $effects.countUp('#game-final-points',{text:finalScore.points});
+       })
+       */
+
+       tl.from('#gos-button',{
+            delay:2,
+            duration:.5,
+            y:300,
+            ease:"back.out(1.7)"
+        });
+
+
+    }
+
+
+    this.emptyBoard = function(){
+        let board = document.querySelector('.board');
+        board.innerHTML = "";
+    }
+
+    this.hideTimer = function(){
+        tools.addClass('.time-box','hidden');
+    }   
+
+   
+    
 
 
 

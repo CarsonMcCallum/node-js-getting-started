@@ -1,0 +1,25 @@
+<section class="overlay-screen hidden" id="game-over-screen" data-section="game-over">
+  <div class="section-container">
+    <div class="d-flex flex-column flex-justify-start height-100 gap-medium">
+      <div class="d-flex flex-justify-center content-divider-small"></div>
+      <div class="d-flex flex-justify-center page-title" id="game-over-screen-title">Game!</div>
+
+      <div class="d-flex flex-justify-center height-100 flex-items-center"> 
+            <div class="d-flex flex-justify-center flex-column">
+                    <div class="score" style="margin-bottom:5vh;">
+                        <div class="score-label">Points earned:</div> 
+                        <div id="game-final-points" class="score-value blue">--</div>
+                    </div>
+                    <div class="score">
+                        <div class="score-label">Matches found:</div> 
+                        <div id="game-matches-found" class="score-value orange">--</div>
+                    </div>
+            </div>
+      </div>
+          <div class="d-flex flex-justify-center flex-push-to-column-bottom"> 
+            <button class="button primary large" id="gos-button"  data-action-id="game_over_action" data-target="return_to_home">Continue</button>
+          </div>
+    </div>
+
+    </div>
+</section>

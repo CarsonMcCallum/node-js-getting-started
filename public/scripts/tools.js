@@ -16,7 +16,12 @@ function Tools(){
             console.log(e)
         }
     }
-
+    // Gasp query selector returns array of elements.
+    this.q = function(element){
+        let q = gsap.utils.selector(element);
+        return q;
+    }
+    
     this.getOne = function(identifier){
         try{
             let elem = document.querySelector(identifier);

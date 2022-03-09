@@ -433,3 +433,19 @@ background: radial-gradient(rgb(73 30 233),rgb(73 30 233));
     align-items: center;
     margin: 0px 0px 3px;
 }
+
+
+/* Game over screen */
+
+.score{
+    font-size: 1.3rem;
+}
+.score-label{
+
+}
+.score-value{
+    text-align: center;
+    font-size: 2.3rem;
+    line-height: 2;
+    font-family: 'Bangers', cursive;
+}

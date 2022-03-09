@@ -32,13 +32,13 @@
 
       <div class="game-mode-actions" style="padding:0px 5%;">
         <div class="d-flex flex-row flex-justify-center">
-            <button class="button primary large back-button" data-action-id="close_mode_overview">Back</button>
-             <button class="button primary large" data-action-id="load_open_mode">Start</button>
+            <button class="button primary large back-button" data-audio-id="button"  data-action-id="close_mode_overview">Back</button>
+             <button class="button primary large" data-audio-id="button load-mode" data-action-id="load_open_mode">Start</button>
           </div>
       </div>
       <div class="game-mode-cancel hidden" style="padding:0px 5%;">
         <div class="d-flex flex-row flex-justify-center">
-            <button class="button primary large" data-action-id="cancel_load_mode">Cancel</button>
+            <button class="button primary large" data-audio-id="button" data-audio-id="button" data-action-id="cancel_load_mode">Cancel</button>
           </div>
       </div>
     </section>
@@ -49,6 +49,9 @@
 
 
     <%- include ("../pages/game.ejs") %>
+
+    <%- include ("../partials/game-over-screen.ejs") %>
+
 
   </div>
 </body>
@@ -65,27 +68,50 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/TextPlugin.min.js"></script>
 <script src="/lib/gsap/CustomEase.min.js"></script>
 <script src="/lib/gsap/CustomWiggle.min.js"></script>
+<script src="/lib/gsap/ScrambleTextPlugin.min.js"></script>
+
 <script>
   gsap.registerPlugin(CustomEase, CustomWiggle);
   CustomWiggle.create("Wiggle.uniform", {wiggles:6, type:"uniform"});
 
-  var sfx_clickArr = [
+
+    var sfx_clickArr = [
       'click_3.wav',
-      'Pop (6).wav'
+      'Pop (6).wav',
+      'Mouth Interface (4).wav',
+      'Pop (3).wav'
     ];
+
     var $sfx_click = new Howl({
-      src: '/sfx/' + sfx_clickArr[1],
+      src: '/audio/sfx/' + sfx_clickArr[1],
       volume: 1.0,
       onend: function () {
        // alert('We finished with the setup!');
       }
     });
+
+    var $sfx_load_mode = new Howl({
+      src: '/audio/sfx/Queue.wav',
+      volume: 1.0,
+      onend: function () {
+       // alert('We finished with the setup!');
+      }
+    });
+
+    var $sfx_button = new Howl({
+      src: '/audio/sfx/' + sfx_clickArr[3],
+      volume: 1.0,
+      onend: function () {
+       // alert('We finished with the setup!');
+      }
+    });
+
     var sfx_errorArray = [
       'click_17.wav',
       'Buzz Error (13).wav'
     ];
     var $sfx_error = new Howl({
-      src: '/sfx/' + sfx_errorArray[1],
+      src: '/audio/sfx/' + sfx_errorArray[1],
       volume: 1.0,
       onend: function () {
        // alert('We finished with the setup!');
@@ -93,7 +119,7 @@
     });
 
     var $sfx_start = new Howl({
-      src: '/sfx/' + 'Gong (2).wav',
+      src: '/audio/sfx/' + 'Gong (2).wav',
       volume: 1.0,
       onend: function () {
        // alert('We finished with the setup!');
@@ -107,7 +133,7 @@
     ];
 
     var $sfx_success = new Howl({
-      src: '/sfx/' + sfx_successArr[0],
+      src: '/audio/sfx/' + sfx_successArr[0],
       volume: 1.0,
       onend: function () {
        // alert('We finished with the setup!');
@@ -115,19 +141,55 @@
     });
 
     var $sfx_card_slide = new Howl({
-      src: '/sfx/' + 'cardPlace3.ogg',
+      src: '/audio/sfx/' + 'cardPlace3.ogg',
       volume: 1.0,
+      
       onend: function () {
        // alert('We finished with the setup!');
       }
     });
 
+    var $musicOptions = [
+      "Casual Game Music 05.wav"
+    ];
 
+    var $gameMusic = new Howl({
+      src: '/audio/music/' + $musicOptions[0],
+      loop: true,
+      volume:0.6
+    });
+
+    var $voice_effects = new Howl({
+      src: '/audio/music/voice_effects.mp3',
+      loop: true,
+      volume:0.6
+    });
+
+    var $voice_effects = new Howl({
+      src: '/audio/sfx/voice_effects.mp3',
+      sprite: {
+        start: [0, 1000],
+        finish: [1000, 1030],
+        winner: [6000, 5000]
+      }
+    });
+
+    var $start_game_intro = new Howl({
+      src: '/audio/sfx/Drum Roll (1).wav',
+      volume: 1.0,
+    })
+    
+
+   var $sfx_count_up  = new Howl({
+      src: '/audio/sfx/Prize Wheel 2 Spin Long.wav',
+      volume: 1.0,
+    })
     
   
 </script>
 </script>
 <script src="/scripts/tools.js"></script>
+<script src="/scripts/audio.js"></script>
 <script src="/scripts/effect-methods.js"></script>
 <script src="/scripts/effects.js"></script>
 <script src="/scripts/game/card-styles.js"></script>
