@@ -6,7 +6,8 @@ function $GameLogic() {
       this.mode = null;
       this.gameVars = {
         boardLength:null,
-        gameLength:60,
+        columns:null,
+        gameLength:120,
         hints:{
           allowed:true,
           interval:10, // Show hint every X seconds.
@@ -18,7 +19,7 @@ function $GameLogic() {
       this.serverEvent = null;
       this.deck = [];
       this.score = 0;
-      this.points = 0;
+      this.points = [];
       this.activeCards = [];
       this.usedCards = [];
       this.selects = [];
@@ -59,7 +60,8 @@ function $GameLogic() {
 
         if(this.mode == "practice"){
             // Insert practice mode variables here.
-            this.gameVars.boardLength = 20; // 12 cards.
+            this.gameVars.boardLength = 11; // 12 cards.
+            this.gameVars.columns = 4;
             console.log('set practice game vars here...')
         }
     }
@@ -76,8 +78,20 @@ function $GameLogic() {
     }
 
     this.startGame = function(){
-        this.sendEvent("create board",{boardLength:_this.gameVars.boardLength})
-        this.drawCards();
+        this.sendEvent("create board",{boardLength:_this.gameVars.boardLength,columns:this.gameVars.columns});
+
+        let boardBoxIndexArray = [];
+        for(let i = 0; i <= _this.gameVars.boardLength; i++){
+          boardBoxIndexArray.push(i);
+        }
+
+        this.drawCards(_this.gameVars.boardLength,boardBoxIndexArray);
+          
+        setTimeout(function(){
+            _this.sendEvent("start");
+            _this.setGameInterval(true,_this.gameVars.gameLength);
+            _this.checkIfBoardHasMatch();
+        },2000)
     }
 
 
@@ -101,7 +115,42 @@ function $GameLogic() {
       _this.updateHints();
       
 
+      if(_this.clock == (_this.gameVars.gameLength * .75)){
 
+        _this.sendEvent("add row",
+            {
+              rowBoxIndexes:[12,13,14,15]
+            }
+          );
+
+          _this.drawCards(3,[12,13,14,15]);
+          
+      }
+
+      if(_this.clock == (_this.gameVars.gameLength * .5)){
+
+        _this.sendEvent("add row",
+            {
+              rowBoxIndexes:[16,17,18,19]
+            }
+          );
+
+          _this.drawCards(3,[16,17,18,19]);
+  
+      }
+
+      if(_this.clock == (_this.gameVars.gameLength * .25)){
+
+        _this.sendEvent("add row",
+            {
+              rowBoxIndexes:[20,21,22,23]
+            }
+          );
+
+          _this.drawCards(3,[20,21,22,23]);
+  
+      }
+      
      
       // Update time.
       if(_this.clock > 0){
@@ -118,7 +167,13 @@ function $GameLogic() {
 
       if(_this.clock <= 0){
         clearInterval(_this.gameInterval);
-        _this.sendEvent("game over",{finalScore:{matchesFound:_this.score,points:_this.points}})
+
+        _this.sendEvent("game over",
+          {finalScore:{
+              matchesFound:_this.score,
+              points:_this.points
+            }
+          })
         _this.sendEvent("clock", {time:"0:00"})
       }
       
@@ -127,7 +182,7 @@ function $GameLogic() {
 
     this.updateHints = function(){
       if(_this.gameVars.hints.allowed){
-        console.log('hints allowed')
+        
         if(_this.timeSinceLastHint >= _this.gameVars.hints.interval){
           if(_this.hintsGiven < _this.gameVars.hints.max){
             console.log('show hint')
@@ -151,27 +206,28 @@ function $GameLogic() {
     */
 
 
-    this.drawCards = function(){
+    this.drawCards = function(numberOfCards,indexArray){
         console.log('drawCards...')
 
         var cardsForBoard = [];
 
-        for(let i = 0; i <= this.gameVars.boardLength ; i++){
+        console.log('board length = ', _this.gameVars.boardLength);
+     
+        for(let i = 0; i <= numberOfCards; i++){
             let nextCard = _this.getNextCard();
             console.log('nextCard',nextCard)
-            let card = _this.createCard(i, nextCard);
+            let card = _this.createCard(indexArray[i], nextCard);
             //_this.drawCard(card,i);
            // cardsForBoard.push(card)
-            this.activeCards.push(nextCard);
-            this.sendEvent("draw card",{card:nextCard,index:i})
+            _this.activeCards.push(nextCard);
+
+            _this.sendEvent("draw card",{
+              card:nextCard,
+              index:indexArray[i]
+            });
         }
 
-
-        setTimeout(function(){
-            _this.sendEvent("start");
-            _this.setGameInterval(true,_this.gameVars.gameLength);
-            _this.checkIfBoardHasMatch();
-        },2000)
+     
         
     }
     
@@ -182,10 +238,16 @@ function $GameLogic() {
         console.log('parsePlayerEvent',event.pid, event);
 
             if(event.name == "touch_card"){
-                    console.log('touch_card')
+              console.log('touch_card')
+              if(event.data.action == "select"){
+                    console.log('select')
                     console.log(_this.players);
                     console.log(event.data.boardIndex);
                     _this.selectCard(event.pid, event.data.boardIndex);
+              }if(event.data.action == "unselect"){
+                    console.log('logic unselect');
+                    _this.unselectCard(event.pid,event.data.boardIndex);
+              }
             }
 
             if(event.name == "deal deck"){
@@ -343,19 +405,19 @@ function $GameLogic() {
 
     this.selectCard = function(pid,boardIndex){ 
 
-        let playerSelectsIndex = this.players.indexOf(pid);
+        let playerIndex = this.players.indexOf(pid);
 
         let card = this.activeCards[boardIndex];
 
         console.log('card',card);
 
-        _this.selects[playerSelectsIndex].push(card);
+        _this.selects[playerIndex].push(card);
 
-        if(_this.selects[playerSelectsIndex].length >= 3){
+        if(_this.selects[playerIndex].length >= 3){
             console.log('logic says check');
-            console.log(_this.selects[playerSelectsIndex])
+            console.log(_this.selects[playerIndex])
             //_this.allowPlayerInput = false;
-            var isValid = _this.checkIfMatch(_this.selects[playerSelectsIndex]);
+            var isValid = _this.checkIfMatch(_this.selects[playerIndex]);
 
                 if(isValid){
                   console.log('logic isValid Match!')
@@ -363,9 +425,11 @@ function $GameLogic() {
 
                   _this.score++;
 
-                  _this.points+= 60;
+                  //_this[playerIndex].points += 60;
+                  _this.points += 60;
+                  
 
-                  _this.clock+= 10; // Add 30 seconds.
+                  //_this.clock+= 10; // Add 30 seconds.
 
                     //Message correct!
                     //alert('u did it!')
@@ -373,7 +437,7 @@ function $GameLogic() {
                     //resetVars();
 
                     let matchedCardsIndexes = [];
-                    _this.selects[playerSelectsIndex].forEach(function(_c,index){
+                    _this.selects[playerIndex].forEach(function(_c,index){
                       let _cardIndex = _this.activeCards.indexOf(_c);
                       console.log('_cardIndex',_cardIndex)
                       matchedCardsIndexes.push(_cardIndex);
@@ -387,12 +451,12 @@ function $GameLogic() {
 
                     //_this.sendEvent(pid,)
 
-                    _this.selects[playerSelectsIndex].splice(0);
+                    _this.selects[playerIndex].splice(0);
                   
                 } else {
                 //Message error!
                     console.log('logic - No Match!'); 
-                   _this.selects[playerSelectsIndex].splice(0);
+                   _this.selects[playerIndex].splice(0);
                    _this.clock-= 0;
                    _this.sendEvent("incorrect",{pid:pid});
                 }
@@ -407,11 +471,27 @@ function $GameLogic() {
     }
 
 
+    this.unselectCard = function(pid,boardIndex){ 
+      console.log('unselectCard')
+      let playerSelectsIndex = this.players.indexOf(pid);
+
+      let card = this.activeCards[boardIndex];
+
+      console.log('logic - unselect card',card,boardIndex);
+
+      _this.selects[playerSelectsIndex].splice(_this.selects[playerSelectsIndex].indexOf(card),1);
+
+      //_this.selects[playerSelectsIndex].(card);
+
+    }
+
+
     this.checkIfBoardHasMatch = function(){
       let matchExists = this.findMatches();
     
       if(matchExists.length > 0){
         console.log('match exists', matchExists.length)
+        console.log(matchExists)
       }else{
         _this.sendEvent("no matches");
         setTimeout(_this.drawCards,2000);
@@ -423,6 +503,7 @@ function $GameLogic() {
       let counter = 0;
       let MatchesFound = [];
       var cards = _this.activeCards;
+      console.log('findMatches', _this.activeCards)
 
       for(var x = 0; x < cards.length; x++){
         for(var y = 1; y < cards.length; y++){

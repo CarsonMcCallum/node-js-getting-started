@@ -30,6 +30,7 @@ function Game(server,parent,toggleMasterLoadingScreen) {
       this.deck = [];
       this.activeCards = [];
       this.selects = [];
+      this.playerOneScore = 0;
       this.allowPlayerInput = false;
       this.inputMode = "standby"; // Game input modes: standby->active->matching->disabled
       this.clockElem = null;
@@ -67,6 +68,9 @@ function Game(server,parent,toggleMasterLoadingScreen) {
             this.clockElem = null;
             this.clock = null;
             this.gameOverScreen = tools.getOne('#game-over-screen');
+
+            // Game over screen.
+            gsap.set('.score-value',{text:'--'});
         }
 
 
@@ -85,7 +89,7 @@ function Game(server,parent,toggleMasterLoadingScreen) {
 
 
         if(event.name == "create board"){
-            createBoard(event.data.boardLength);
+            createBoard(event.data.boardLength,event.data.columns);
         }
 
         if(event.name == "deal deck"){
@@ -123,10 +127,9 @@ function Game(server,parent,toggleMasterLoadingScreen) {
 
                 tools.removeClass('.time-box','hidden');
                 gsap.set('.time-box',{scale:1,opacity:1});
-                gsap.from('.time-box',{duration:.4,scale:0,opacity:0})
+                //gsap.from('.time-box',{duration:.4,scale:0,opacity:0})
                 // Set all box widths so they dont change when cards move.
-                let box = tools.getOne('.box:nth-child(1)');
-                gsap.set('.box',{width:box.clientWidth,height:box.clientHeight});
+                _this.setBoxDimensions();
 
                 _this.activeCards.forEach(function(card){
                    // _this.flipCard(card,"front");
@@ -198,6 +201,20 @@ function Game(server,parent,toggleMasterLoadingScreen) {
                 _this.cardHint(event.data.boardIndex)
             }
 
+            if(event.name == "add row"){
+
+                let board = tools.getOne('.board');
+                let getY = tools.position(board,"top center");
+                let fromY = getY.y;
+               
+                _this.addBoxes(event.data.rowBoxIndexes);
+                _this.setBoxDimensions();
+                
+                gsap.from('.board',{y:46});
+                $sfx_new_row.play();
+                $effects.floatGraphic();
+            }
+
             if(event.name == "no matches"){
 
                 _this.shout("negative","Shuffle!");
@@ -243,7 +260,7 @@ function Game(server,parent,toggleMasterLoadingScreen) {
     }
 
 
-    createBoard = function (_boardLength) {
+    createBoard = function (_boardLength,_columns) {
 
         try{
 
@@ -262,14 +279,21 @@ function Game(server,parent,toggleMasterLoadingScreen) {
             console.log(e)
         }
 
-        let board = document.querySelector('.board');
-        board.innerHTML = "";
+        // Clear inner html of board.
+        _this.clearBoard();
 
-        for(let i = 0; i < _boardLength; i++){
-            let box = '<div class="box" data-box-index="'+i+'"></div>';
-            box = tools.stringToHTML(box);
-            board.appendChild(box);
+
+        let initialBoardArray = [];
+
+        for(let i = 0; i <= _boardLength; i++){
+            initialBoardArray.push(i);
         }
+       
+        // Add starting board length.
+        _this.addBoxes(initialBoardArray,_columns);
+
+        // Set number of board grid columns.
+        _this.setBoardGrid(_columns);
 
         _this.sendToServer("ready to start");
         
@@ -277,6 +301,33 @@ function Game(server,parent,toggleMasterLoadingScreen) {
             $audio.sfx("start intro");
         });
         
+    }
+
+    this.clearBoard = function(){
+        let board = document.querySelector('.board');
+        board.innerHTML = "";
+    }
+
+    this.addBoxes = function(indexArr){
+        let board = document.querySelector('.board');
+
+        for(let i = 0; i < indexArr.length; i++){
+            let box = '<div class="box" data-box-index="'+indexArr[i]+'"></div>';
+            box = tools.stringToHTML(box);
+            board.appendChild(box);
+        }
+
+    
+    }
+
+    
+    this.setBoxDimensions = function(){
+        let box = tools.getOne('.box:nth-child(1)');
+        gsap.set('.box',{width:box.clientWidth,height:box.clientHeight});
+    }
+
+    this.setBoardGrid = function(columns){  
+        document.querySelector(".board").style.gridTemplateColumns = "repeat("+columns+", 1fr)";
     }
 
     this.showBoard = function(){
@@ -609,6 +660,8 @@ function Game(server,parent,toggleMasterLoadingScreen) {
 
         setTimeout(function(){
             //$sfx_success.play();
+            _this.playerOneScore++;
+            document.querySelector('.scoreboard-value[data-player="one"]').innerText = _this.playerOneScore;
         },100)
 
         let tl = new gsap.timeline();
@@ -698,6 +751,12 @@ function Game(server,parent,toggleMasterLoadingScreen) {
 
     }
 
+    this.unselectCard = function(card){
+        console.log('unselect');
+        card.classList.remove('selected');
+        _this.selects.splice(_this.selects.indexOf(card),1);
+    }
+
     this.incorrectMatch = function(){
         _this.allowPlayerInput = false;
         $audio.sfx("incorrect");
@@ -785,9 +844,12 @@ function Game(server,parent,toggleMasterLoadingScreen) {
                         if(event.target.dataset.selected == "false"){
                             event.target.dataset.selected = "true";
                             _this.selectCard(event.target);
-
-                            _this.sendToServer("touch_card",{boardIndex:event.target.dataset.index});
-                           console.log('click card');
+                            _this.sendToServer("touch_card",{action:"select",boardIndex:event.target.dataset.index});
+                          
+                        }else{
+                            event.target.dataset.selected = "false";
+                            _this.unselectCard(event.target);
+                            _this.sendToServer("touch_card",{action:"unselect",boardIndex:event.target.dataset.index});
                         }
                     }
                    // alert('touch card');
@@ -825,6 +887,8 @@ function Game(server,parent,toggleMasterLoadingScreen) {
             gsap.set('.shout-effect-background',{clearProps:"all"})
         })
     }
+
+    
 
 
     this.createReportList = function () {

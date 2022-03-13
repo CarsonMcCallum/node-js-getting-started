@@ -212,7 +212,7 @@
     line-height: .25;
     text-align: left;
     padding-right: 5px;
-    opacity: 0;
+    opacity: 1;
     padding-right: 9px;
     padding: 5px 10px;
     background: #0000007a;
@@ -221,13 +221,117 @@
     border: 1px solid black;
     border-radius: 5px;
     position: absolute;
-    top: 2%;
-    right: 5%;
+    top: 5%;
+    right: 6%;
+    line-height: unset;
+    font-size: 20px;
+    /* padding-top: 12px; */
+    transform: translate(0%, -20%) scale(0.8, 0.8);
+}
+
+.time-box.centered{
+    top: 0px;
+    right: 0px;
     line-height: 1.4;
     font-size: 20px;
+    left: 0px;
+    max-width: 70px;
+    margin: auto;
+    /* background: url(/images/time-box-inner.png); */
+    background-size: CONTAIN;
+    background-repeat: no-repeat;
+    border: none;
+    height: 40px;
+    border-radius: 0px;
+    max-width: 80px;
+    background-position-x: center;
+    line-height: 2;
+    font-size: 22px;
+    z-index: 1;
 }
 
 
+.score-box{
+    background: url(/images/multiplayer-score-background.png);
+    width: 229px;
+    height: 46px;
+    position: absolute;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position-x: center;
+    z-index: 0;
+    /* top: 19.8%; */
+    border-top: 3px solid hsl(208deg 83% 14%);
+    box-shadow: 0px 7px 5px 0px #00000021 inset;
+    transform: translate(0%, -20%) scale(0.8, 0.8);
+    display: none;
+}
+.score-box.small{
+    background: url(/images/time-box-inner.png);
+    width: 119px;
+    height: 46px;
+    position: absolute;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position-x: center;
+    z-index: 0;
+    top: 50px;
+    border-top: 3px solid hsl(208deg 83% 14%);
+    box-shadow: 0px 7px 5px 0px #00000021 inset;
+    transform: translate(0%, -20%) scale(0.8, 0.8);
+    box-shadow: none;
+}
+
+.score-box-inner{
+    position: relative;
+    height: 100%;
+    width: 84%;
+    margin: auto;
+}
+
+.scoreboard-value{
+    font-size: 1.5rem;
+    color: white;
+    width: 3.7rem;
+    text-align: center;
+    position: absolute;
+    top: 0.5rem;
+    text-shadow: 1px 1px black;
+}
+
+.scoreboard-value[data-player="one"]{
+color:#3c91fc;
+}
+
+.scoreboard-value[data-player="two"]{
+right: 0px;
+color:#d12e41;
+}
+
+.player-bar{
+    position: absolute;
+    top: 0px;
+    width: 38%;
+    height: 44px;
+    left: 0px;
+    width: calc(50vw - 50px);
+    display: none;
+}
+.player-bar[data-player="two"]{
+    right: 0px;
+    left: unset;
+}
+.player-bar-background{
+    background-color: black;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    width: 100%;
+    background: #0000007a;
+}
+.player-bar-inner{
+
+}
 
 .board-container{
         flex-shrink: 0;
@@ -259,6 +363,7 @@
     height: auto;
     align-items: center;
     gap: 4%;
+    transform-origin: 50% 50%;
 }
 .box{
     color: white;
@@ -345,6 +450,7 @@
 }
 .card[data-c="1"] .card-bg{
 background: radial-gradient(rgb(73 30 233),rgb(73 30 233));
+background: radial-gradient(rgba(30, 125, 233, 1),rgba(30, 125, 233, 1));
 }
 .front{
     width: 100%;

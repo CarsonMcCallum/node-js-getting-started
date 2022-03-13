@@ -139,3 +139,74 @@ width: 100%;
     text-align: center;
     background: linear-gradient(120deg, #44b5ff, #03a9f4);
 }
+
+
+.shout-graphic{
+
+}
+
+.shout-graphic[data-name="blue-shout-graphic"]{
+    width: 171px;
+    position: absolute;
+    margin: auto;
+    left: 0px;
+    right: 0px;
+    overflow: visible;
+}
+
+.shout-graphic[data-name="blue-shout-graphic"] img{
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+
+.shout-graphic[data-name="blue-shout-graphic"] .blue-shout-graphic.top{
+    background: url(/images/blue-shout.png);
+    height: 27px;
+    width: 100%;
+    background-size: 130%;
+    background-position: 47% 0%;
+    position: absolute;
+    top: 0px;
+}
+
+.shout-graphic[data-name="blue-shout-graphic"] .blue-shout-graphic.bottom{
+    background: url(/images/blue-shout.png);
+    height: 37px;
+    width: 100%;
+    background-size: 122%;
+    background-position: 45% 98%;
+    position: absolute;
+    top: 60px;
+}
+
+
+.shout-graphic[data-name="blue-shout-graphic"] .blue-shout-graphic.glow{
+    background: url(/images/blue-shout-glow.png);
+    height: 68px;
+    width: 160%;
+    background-size: 300px;
+    background-position: 0% 0%;
+    background-repeat-x: no-repeat;
+    margin: auto;
+    position: absolute;
+    left: -57px;
+    top: 15px;
+}
+
+
+
+.shout-graphic[data-name="blue-shout-graphic"] .blue-shout-graphic.text{
+    background: url(/images/text/new_row.png);
+    height: 18px;
+    width: 100%;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    margin: auto;
+    position: absolute;
+    left: 0px;
+    top: 38px;
+    right: 0px;
+    margin: auto;
+}

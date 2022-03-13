@@ -92,6 +92,15 @@ function Tools(){
             console.log('adjust to center x by ',  (w * .5))
             pos.x = pos.x + (w * .5);
         }
+        if(position == "center center"){
+            // X and Y center of element.
+            let w = elem.clientWidth;
+            let h = elem.clientHeight;
+            console.log('elem width', w)
+            console.log('adjust to center x by ',  (w * .5))
+            pos.x = pos.x + (w * .5);
+            pos.y = pos.y - (h * .5);
+        }
         return {y:pos.y,x:pos.x};
 
     }

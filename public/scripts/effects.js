@@ -141,6 +141,40 @@ function Effects(){
     }
 
 
+    this.floatGraphic = function(){
+        
+        // Create graphic and append to effects screen.
+        let effectElement = $EffectMethods.floatGraphic();
+        let firstBox = tools.getOne('.box[data-box-index="0"]');
+        let childPosition = tools.position(firstBox,"top center");
+        _this.parent.appendChild(effectElement);
+        gsap.set('.shout-graphic[data-name="blue-shout-graphic"]',{y:childPosition.y - 140});
+
+        let bs_top = document.querySelector('.shout-graphic[data-name="blue-shout-graphic"] .blue-shout-graphic.top');
+        let bs_glow = document.querySelector('.shout-graphic[data-name="blue-shout-graphic"] .blue-shout-graphic.glow');
+        let bs_bottom = document.querySelector('.shout-graphic[data-name="blue-shout-graphic"] .blue-shout-graphic.bottom');
+        let bs_text = document.querySelector('.shout-graphic[data-name="blue-shout-graphic"] .blue-shout-graphic.text');
+       
+
+        // Animate.
+        let tl = new gsap.timeline({onComplete:function(){
+            _this.remove(bs_top);
+            _this.remove(bs_glow);
+            _this.remove(bs_bottom);
+            _this.remove(bs_text);
+        }});
+        
+        let _ease =   "expo.out";
+        let _dur = .5;
+        tl.from(bs_top,{duration:_dur,y:30,opacity:0,ease:_ease});
+        tl.from(bs_bottom,{duration:_dur,y:-30,opacity:0,ease:_ease},"-=.5");
+        tl.from(bs_text,{duration:2,scale:3,opacity:0,ease:"elastic.out(1, 0.3)"},"-=.5");
+        tl.from(bs_glow,{duration:_dur,scale:.4,opacity:0,ease:_ease},"-=2");
+        tl.to('.shout-graphic[data-name="blue-shout-graphic"]',{duration:.1,scaleX:1.4,scale:1.1,opacity:0},"-=0");
+        
+    }
+
+
 
     this.countUp = function(identifier, {duration = 2000, text = false, callback = false} = {}){
 
