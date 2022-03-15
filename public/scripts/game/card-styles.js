@@ -30,7 +30,9 @@ var $Colors = [
 var $CardStyles = {
     default:{
         colors:{
-            0:{
+           /* 
+                // White fill
+           0:{
                 sc:'rgb('+$ColorSets[0]+')',
                 f:{
                     0:'rgba('+$ColorSets[0]+',0)',  //  Empty
@@ -75,33 +77,49 @@ var $CardStyles = {
                     2:'rgba('+$ColorSets[0]+',1)'   //  Full
                 }
             },
-            /*
-            1:{
-                sc:'rgb('+$ColorSets[1]+')',
+            */
+            0:{
+                sc:'rgb('+$Colors[0]+')',
                 f:{
-                    0:'rgba('+$ColorSets[1]+',0)',  //  Empty
-                    1:'rgba('+$ColorSets[1]+',.3)', //  Half
-                    2:'rgba('+$ColorSets[1]+',1)'   //  Full
+                    0:'rgba('+$Colors[0]+',0)',  //  Empty
+                    1:'rgba('+$Colors[0]+',.3)', //  Half
+                    2:'rgba('+$Colors[0]+',1)'   //  Full
+                }
+            },
+            1:{
+                sc:'rgb('+$Colors[1]+')',
+                f:{
+                    0:'rgba('+$Colors[1]+',0)',  //  Empty
+                    1:'rgba('+$Colors[1]+',.3)', //  Half
+                    2:'rgba('+$Colors[1]+',1)'   //  Full
                 }
             },
             2:{ 
-                sc:'rgb('+$ColorSets[2]+')',
+                sc:'rgb('+$Colors[2]+')',
                 f:{
-                    0:'rgba('+$ColorSets[2]+',0)',  //  Empty
-                    1:'rgba('+$ColorSets[2]+',.3)', //  Half
-                    2:'rgba('+$ColorSets[2]+',1)'   //  Full
+                    0:'rgba('+$Colors[2]+',0)',  //  Empty
+                    1:'rgba('+$Colors[2]+',.3)', //  Half
+                    2:'rgba('+$Colors[2]+',1)'   //  Full
                 }
             },
             3:{ 
-                sc:'rgb('+$ColorSets[3]+')',
+                sc:'rgb('+$Colors[3]+')',
                 f:{
-                    0:'rgba('+$ColorSets[3]+',0)',  //  Empty
-                    1:'rgba('+$ColorSets[3]+',.3)', //  Half
-                    2:'rgba('+$ColorSets[3]+',1)'   //  Full
+                    0:'rgba('+$Colors[3]+',0)',  //  Empty
+                    1:'rgba('+$Colors[3]+',.3)', //  Half
+                    2:'rgba('+$Colors[3]+',1)'   //  Full
                 }
             
             },
-            */
+            4:{ 
+                sc:'rgb('+$Colors[4]+')',
+                f:{
+                    0:'rgba('+$Colors[4]+',0)',  //  Empty
+                    1:'rgba('+$Colors[4]+',.3)', //  Half
+                    2:'rgba('+$Colors[4]+',1)'   //  Full
+                }
+            
+            },
 
         },
         shapes:{

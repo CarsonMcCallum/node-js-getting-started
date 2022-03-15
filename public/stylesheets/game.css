@@ -508,8 +508,8 @@ background: radial-gradient(rgba(30, 125, 233, 1),rgba(30, 125, 233, 1));
     border-radius: 5px;
     background: linear-gradient(179deg, #00000003, #00000017);
     background-color: #ffffff;
-    display: none;
 }
+
 .card-graphics{
     transform:scale(.5);
     transform: scale(.5);
