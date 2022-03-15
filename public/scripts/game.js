@@ -216,7 +216,6 @@ function Game(server,parent,toggleMasterLoadingScreen) {
             }
 
             if(event.name == "no matches"){
-
                 _this.shout("negative","Shuffle!");
                 gsap.to('.card',{duration:1,scale:0,onComplete:function(){
                     let boxes = tools.getAll('.box');
@@ -224,7 +223,6 @@ function Game(server,parent,toggleMasterLoadingScreen) {
                         box.innerHTML = "";
                     })
                 }});
-
             }
 
             if(event.name == "game over"){
@@ -379,7 +377,8 @@ function Game(server,parent,toggleMasterLoadingScreen) {
             $CardStyles[$CardTheme].colors[color].f[fill])
             */
         
-        for(let i = 0; i <= number; i++){
+            // One shape only
+            for(let i = 0; i <= number; i++){//for(let i = 0; i <= number; i++){
                     // Shape paramaters: w,h,sw,f,sc
                     _graphicArr.push(
                         _shape(

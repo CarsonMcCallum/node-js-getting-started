@@ -332,7 +332,7 @@ function $GameLogic() {
 
            this.deck.splice(0);//empty deck
            [0, 1, 2].forEach(function(number){
-            [0,1,2].forEach(function(color){
+            [0,1,2,3].forEach(function(color){
               [0,1,2].forEach(function(shape){
                 [0,1,2].forEach(function(fill){
                     _deck.push({
