@@ -33,6 +33,18 @@
             graphic+='</svg>';
         return graphic;
     }
+    
+    var $Sweet = function(w,h,sw,sc,f){
+        let r = (h - sw) * .5,
+        cx = w * .5,
+        cy = h * .5;
+            console.log('circle',w,h,sw,sc,f,r,cx,cy);
+            let fill = f;
+            let graphic = '<img width="22" height="22" src="/images/sweets/00.png"/>';
+                  //  graphic+='<circle cx="'+cx+'" cy="'+cy+'" r="'+r+'" stroke-width="'+sw+'" stroke="'+sc+'" fill="'+f+'" />';
+                //graphic+='</svg>';
+            return graphic;
+    }
 
     var $Chevron = function(w,h,sw,sc,f){
         let fill = f;
@@ -42,12 +54,15 @@
         return graphic;
     }
 
-    var $Card = function(index, cardId,s,c,f,n, graphic = []){
+    var $Card = function(index, cardId,s,c,f,n, graphic = [],bonus = false){
         let _c = '<div id="'+cardId+'" data-index="'+index+'" data-player-action-id="touch_card" data-selected="false" class="card small show-front" data-s="'+s+'" data-c="'+c+'" data-f="'+f+'" data-n="'+n+'">';
          
             _c+=    '<div class="front">';
                 _c+=   '<div class="card-bg" style="background: radial-gradient(rgb('+$Colors[c]+'),rgb('+$Colors[c]+'));">';
                     _c+= '<div class="card-tile"></div>';
+                    if(bonus){
+                        _c+= '<div class="card-bonus">'+bonus+'</div>';
+                    }
                 _c+=   '<div class="card-graphics">';
                         for(let i = 0; i < graphic.length;i++){
                             _c+= '<div class="graphic">';

@@ -92,20 +92,6 @@ function Game(server,parent,toggleMasterLoadingScreen) {
             createBoard(event.data.boardLength,event.data.columns);
         }
 
-        if(event.name == "deal deck"){
-            console.log('game.js','deal deck')
-            _this.createDeck();
-            _this.shuffleArray(_this.deck);
-            console.log(_this.deck)
-
-            for(let i = 0; i <= 11; i++){
-                let nextCard = _this.getNextCard();
-                console.log('nextCard',nextCard)
-                let card = _this.createCard(i, nextCard);
-                _this.drawCard(card,i);
-                }
-        }
-
         if(event.name == "draw card"){
             console.log('game.js','start draw card ------')
             if("card" in event.data){
@@ -357,11 +343,11 @@ function Game(server,parent,toggleMasterLoadingScreen) {
 
     var shapeArr = [
         $Rectangle,
-        $Circle,
+        $Circle, //$Sweet
         $Chevron
     ];
 
-    this.createCard = function(index, {shape,color,fill,number}){
+    this.createCard = function(index, {shape,color,fill,number,bonus}){
        // console.log('game.js','createCard...')
         let cardId = "card-" + String(shape) + String(color) + String(fill) + String(number);
 
@@ -395,7 +381,7 @@ function Game(server,parent,toggleMasterLoadingScreen) {
 
         
 
-        let newCard = $Card(index, cardId,shape,color,fill,number,_graphicArr);
+        let newCard = $Card(index, cardId,shape,color,fill,number,_graphicArr, bonus);
         newCard = tools.stringToHTML(newCard); // Make string into node.
         
 

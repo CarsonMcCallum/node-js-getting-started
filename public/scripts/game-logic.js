@@ -12,8 +12,10 @@ function $GameLogic() {
           allowed:true,
           interval:10, // Show hint every X seconds.
           max:100
-        }
+        },
+        bonusProbabilityCurve:[10,20,30,30,30,35,35,35,60,60,70,70,80,100,100,100]
       };
+      this.energy = 0;
       this.players = null;
       this.server = null;
       this.serverEvent = null;
@@ -117,6 +119,8 @@ function $GameLogic() {
 
       if(_this.clock == (_this.gameVars.gameLength * .75)){
 
+        _this.setEnergy(1);
+
         _this.sendEvent("add row",
             {
               rowBoxIndexes:[12,13,14,15]
@@ -129,6 +133,8 @@ function $GameLogic() {
 
       if(_this.clock == (_this.gameVars.gameLength * .5)){
 
+        _this.setEnergy(1);
+
         _this.sendEvent("add row",
             {
               rowBoxIndexes:[16,17,18,19]
@@ -140,6 +146,8 @@ function $GameLogic() {
       }
 
       if(_this.clock == (_this.gameVars.gameLength * .25)){
+
+        _this.setEnergy(1);
 
         _this.sendEvent("add row",
             {
@@ -177,6 +185,10 @@ function $GameLogic() {
         _this.sendEvent("clock", {time:"0:00"})
       }
       
+    }
+
+    this.setEnergy = function(amount){
+      _this.energy += amount;
     }
 
 
@@ -307,7 +319,6 @@ function $GameLogic() {
       console.log('this.drawNextCards...',indexes)
 
       for(let i = 0; i < 3;i++){
-
           let nextCard = _this.getNextCard();
           console.log('nextCard',nextCard)
           let card = _this.createCard(i, nextCard);
@@ -322,7 +333,25 @@ function $GameLogic() {
     this.getNextCard = function(){
         var card = this.deck[0];
         this.deck.splice(0,1);
+
+        let _bonus = _this.returnBonus();
+          if(_bonus != false){
+            card.bonus = _bonus;
+          }
+
         return card;
+    }
+
+    this.returnBonus = function(){
+      let _bonusAmount = false;
+      let probability = _this.gameVars.bonusProbabilityCurve[_this.energy] / 100;
+      console.log('bonus probability', probability);
+      let chance = Math.random();
+
+      if(chance <= probability){
+        _bonusAmount = "x2";
+      }
+      return _bonusAmount;
     }
 
   
@@ -330,11 +359,11 @@ function $GameLogic() {
 
            let _deck = this.deck;
 
-           this.deck.splice(0);//empty deck
+          this.deck.splice(0);//empty deck
            [0, 1, 2].forEach(function(number){
-            [0,1,2,3].forEach(function(color){
-              [0,1,2].forEach(function(shape){
-                [0,1,2].forEach(function(fill){
+            [0, 1, 2, 3].forEach(function(color){
+              [0, 1, 2].forEach(function(shape){
+                [0, 1, 2].forEach(function(fill){
                     _deck.push({
                     number: number,
                     shape: shape,

@@ -102,7 +102,7 @@
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-    overflow: visible;  
+    overflow: visible;
     gap:10px;
     opacity: 0;
     width: 60px;
@@ -110,22 +110,28 @@
 
 .player-gui-picture{
     flex-shrink: 0;
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     overflow: visible;
     background-color: gray;
+    border-radius: 5px;
+    background-image: url(/images/player-one.png);
+    background-size: contain;
     border-radius: 50px;
+    z-index: 1;
 }
 
 .player-gui-details{
     width: auto; /* 172px */
-  height: auto; /* 40px */
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  overflow: visible;
+    height: auto; /* 40px */
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    overflow: visible;
+    z-index: 1;
+    gap: 4px;
 }
 
 .player-gui-name{
@@ -139,10 +145,11 @@
     font-weight: 500;
     font-style: normal;
     font-family: "DM Sans", sans-serif;
-    color: #999;
+    color: #fff;
     font-size: 15px;
     letter-spacing: 0px;
-    line-height: 1.5;
+    text-shadow: 2px 2px 0px black;
+    padding-top: 2px;
 }
 
 .player-gui-boost-container{
@@ -155,6 +162,7 @@
     align-items: center;
     overflow: visible;
 }
+
 
 .player-gui-boost-bg{
     background-color: #cccccc;
@@ -176,23 +184,34 @@
     font-weight: 400;
     font-style: normal;
     /* font-family: "Righteous", serif; */
-    color: #666666/* {"name":"G4"} */;
+    color: #ffffff/* {"name":"G4"} */;
     font-size: 17px;
     letter-spacing: 0px;
-    line-height: 0.4;
+    line-height: 1.1;
     text-align: left;
-    font-size: 28px;
+    font-size: 15px;
     text-align: center;
-    letter-spacing: -4px;
+    letter-spacing: -1px;
 }
 
 
 .player-gui[data-player-index="0"]{
-    opacity:0;
+    opacity: 1;
+    FONT-WEIGHT: 100;
     position: absolute;
     bottom: 3%;
     left: 5%;
 }
+
+.player-gui-bg-one{
+  position: absolute;
+  height: 46px;
+  z-index: 0;
+  left: 10px;
+}
+
+.player-gui-bg-two{position: absolute;height: 22px;bottom: 1px;left: 30px;}
+
 
 
 .game-limiter{
@@ -539,6 +558,26 @@ background: radial-gradient(rgba(30, 125, 233, 1),rgba(30, 125, 233, 1));
     display: flex;
     align-items: center;
     margin: 0px 0px 3px;
+}
+
+.card-bonus{
+  position: absolute;
+  color: white;
+  font-size: 10px;
+  /* top: 0px; */
+  left: -6px;
+  width: auto;
+  /* right: 0px; */
+  padding: 0px 4px;
+  top: 2px;
+  background: #9c27b0;
+  transform: scale(.8);
+  background: #03c5f4;
+  background-repeat: no-repeat;
+  background-size: contain;
+  margin: auto;
+  border-radius: 20px;
+  border: 2px solid #082d4c;
 }
 
 /* Game over screen */
