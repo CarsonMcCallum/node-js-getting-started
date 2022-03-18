@@ -455,7 +455,7 @@ function $GameLogic() {
                   _this.score++;
 
                   //_this[playerIndex].points += 60;
-                  _this.points += 60;
+                  _this.points = _this.points + 60;
                   
 
                   //_this.clock+= 10; // Add 30 seconds.

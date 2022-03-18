@@ -104,7 +104,7 @@ function Effects(){
         console.log('floatingPoints',_number,_child,_position,_effectType);
 
         // Create point element.
-        let effectElement = $EffectMethods.pointsElement(_number);
+        let effectElement = $EffectMethods.pointsElement("+" + _number);
 
         // Get position of child element.
         let childPosition = tools.position(_child,_position);

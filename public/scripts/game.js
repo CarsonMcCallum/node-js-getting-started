@@ -647,14 +647,15 @@ function Game(server,parent,toggleMasterLoadingScreen) {
         },100)
 
         let tl = new gsap.timeline();
-        tl.from('.shout-background-matches',{opacity:0,duration:.3})
-        tl.from('.shout-text',{duration:.5,delay:.4,opacity:0,yPercent:20,ease:"back.out(1.7)"},"-=1");
-        gsap.from('.beams',{duration:.4,rotation:180,scale:.4,ease:"expo.out(1.7)"})
+        tl.from('.shout-background-matches',{opacity:0,duration:.1})
+        tl.from('.shout-text',{duration:.5,opacity:0,scale:.8,yPercent:20,ease:"back.out(1.7)"},"-=.1");
+        tl.to('.shout-text',{scale:1.05})
+        gsap.from('.shout-background-matches',{duration:.4,scale:0,ease:"back.out(1.7)"})
       
 
         setTimeout(function(){
             _this.clearMatchedShout();
-        },500)
+        },400)
         
     }, delay * 1000)
 
@@ -670,7 +671,7 @@ function Game(server,parent,toggleMasterLoadingScreen) {
         let tl = new gsap.timeline();
 
         gsap.to('.shout-background-matches',{opacity:0,duration:.5})
-        gsap.to('.shout-text',{duration:.4,delay:0,opacity:0,yPercent:20,ease:"expo.in"});
+        gsap.to('.shout-text',{duration:.4,scale:1.4,delay:0,opacity:0,ease:"expo.in"});
 
         let pwch = document.querySelector('.player-won-cards-holder');
 
