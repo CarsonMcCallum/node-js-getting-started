@@ -582,14 +582,11 @@ function Game(server,parent,toggleMasterLoadingScreen) {
 
         // Get cards and order them by 
         let matchesBoxIndex = 0;
-        let delay = .3;
+        let delay = 0;
 
         $sfx_success.play();
         
         indexes.forEach(function(i,index){
-
-        
-           
             let correctCard = _this.activeCards[i];
             correctCard.classList.remove('selected');
             
@@ -630,7 +627,7 @@ function Game(server,parent,toggleMasterLoadingScreen) {
 
             gsap.set(correctCard,{
                 //backgroundColor:"white",
-                scale:1.4,
+                scale:1.2,
                 rotate:matchCardRotations[index]
             })
            
@@ -646,18 +643,18 @@ function Game(server,parent,toggleMasterLoadingScreen) {
         setTimeout(function(){
             //$sfx_success.play();
             _this.playerOneScore++;
-            document.querySelector('.scoreboard-value[data-player="one"]').innerText = _this.playerOneScore;
+            
         },100)
 
         let tl = new gsap.timeline();
-        tl.from('.shout-background-matches',{opacity:0,duration:.5})
-        tl.from('.shout-text',{duration:.5,delay:1,opacity:0,yPercent:20,ease:"back.out(1.7)"},"-=1");
-        gsap.from('.beams',{duration:1,rotation:100,scale:.4,ease:"back.out(1.7)"})
+        tl.from('.shout-background-matches',{opacity:0,duration:.3})
+        tl.from('.shout-text',{duration:.5,delay:.4,opacity:0,yPercent:20,ease:"back.out(1.7)"},"-=1");
+        gsap.from('.beams',{duration:.4,rotation:180,scale:.4,ease:"expo.out(1.7)"})
       
 
         setTimeout(function(){
             _this.clearMatchedShout();
-        },2000)
+        },500)
         
     }, delay * 1000)
 
@@ -669,21 +666,44 @@ function Game(server,parent,toggleMasterLoadingScreen) {
 
     this.clearMatchedShout = function(){
         let matchesBoxes = tools.getAll('.matches-box');
+        let matchesCards = tools.getAll('.matches-box .card');
         let tl = new gsap.timeline();
 
         gsap.to('.shout-background-matches',{opacity:0,duration:.5})
-        gsap.to('.shout-text',{duration:.4,delay:0,opacity:0,yPercent:20,ease:"expo.in"})
-        gsap.to(matchesBoxes,{duration:.5,scale:0,opacity:0,onComplete:function(){
+        gsap.to('.shout-text',{duration:.4,delay:0,opacity:0,yPercent:20,ease:"expo.in"});
+
+        let pwch = document.querySelector('.player-won-cards-holder');
+
+        matchesCards.forEach(function(card){
+                    // Get state for flip draw effect.
+            const state = Flip.getState(card);
+            gsap.set(card,{clearProps:"all"});
+            pwch.appendChild(card);
+            Flip.from(state, {
+                // Optional properties related to HOW it's transitioned
+                duration: .5,
+                scale:1.4,
+                ease: "power2.in",
+            });
+        });
+
+        setTimeout(function(){
             matchesBoxes.forEach(function(mb){
                 mb.innerHTML = "";
-            })
+            });
+            pwch.innerHTML = "";
             tools.addClass('.shout','hidden');
             gsap.set('.shout-text',{clearProps:"all"});
             gsap.set('.shout-background-matches',{clearProps:"all"});
-           
+            gsap.from('.minicard',{duration:.4,rotate:30});
             gsap.set('.matches-box',{clearProps:"all"});
             _this.allowPlayerInput = true;
-        }},"-=.4")
+            document.querySelector('.scoreboard-value[data-player="one"]').innerText = _this.playerOneScore;
+            let pcc = document.querySelector('.player-card-count');
+            pcc.classList.remove('hidden')
+            pcc.innerText = _this.playerOneScore;
+            gsap.from(pcc,.5,{scale:1.3,ease:"bounce"});
+        },500);
       
     }
 

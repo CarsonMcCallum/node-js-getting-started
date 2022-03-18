@@ -132,7 +132,7 @@ function Effects(){
         tl.to(effectElement,inAnim);
 
         let outAnim = _this.animations.smallFadeInOut.out;
-        outAnim.duration = .3;
+        outAnim.duration = 1;
         tl.to(effectElement, outAnim);
         
 

@@ -223,7 +223,7 @@ function cancelLoadOpenGameMode(){
 }
 
 
-connectToServer();
+//connectToServer();
 
 function connectToServer(){
     // Create server instance and send along game mode. 

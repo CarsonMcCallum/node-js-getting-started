@@ -476,7 +476,7 @@ function $GameLogic() {
 
                     setTimeout(function(){
                       _this.drawNextCards(matchedCardsIndexes);
-                    },3000);
+                    },1000);
 
                     //_this.sendEvent(pid,)
 

@@ -1,3 +1,22 @@
+/* Dev*/
+.dev-button{
+    position: fixed;
+    top: 2%;
+    text-align: center;
+    padding: 10px;
+    color: black;
+    background: #00000040;
+    border-radius: 2px;
+    color: white;
+    border: 1px solid black;
+}
+
+.dev-button.one{
+    left:2%;
+}
+
+/* Game */
+
 .game-screen-container{
     width: 100%;
     height: 100%;
@@ -165,10 +184,11 @@
 
 
 .player-gui-boost-bg{
-    background-color: #cccccc;
-    height: 10px;
-    width: 100px;
+    background-color: #0000008a;
+    height: 15px;
+    width: 60px;
     border-radius: 3px;
+    border: 1px solid black;
 }
 .player-gui-boost-bar{
 
@@ -208,12 +228,53 @@
   height: 46px;
   z-index: 0;
   left: 10px;
+  display: none;
 }
 
-.player-gui-bg-two{position: absolute;height: 22px;bottom: 1px;left: 30px;}
+.player-gui-bg-two{position: absolute;height: 22px;bottom: 1px;left: 30px;display: none;}
 
+.player-mini-cards{
+    position: fixed;
+    bottom: 23px;
+    left: 180px;
+    height: 30px;
+    width: 50px;
+    z-index: 10;
+}
+.minicard{/* transform: rotate(-8deg); */position: absolute;}
+.minicard img{
+    height: 20px;
+    border: 1px solid black;
+    border-radius: 3px;
+}
+.minicard:nth-child(1){
+    z-index: 3;
+    transform: rotate(-6deg);
+    left: -2px;
+}
+.minicard:nth-child(2){
+    transform: rotate(12deg);
+    left: 3px;
+    top: -4px;
+}
+.minicard:nth-child(3){transform: rotate(6deg);top: -2px;}
 
+.player-card-count{position: absolute;z-index: 3;color: black;font-size: 11px;border: 2px solid black;width: auto;text-align: center;padding: 0px 5px;border-radius: 13px;background: red;color: white;left: 5px;}
 
+.player-won-cards-holder{
+    position: fixed;
+    bottom: 28px;
+    left: 180px;
+    height: 25px;
+    width: 25px;
+}
+.player-won-cards-holder .card{
+    transform: scale(.35) rotate(0deg);
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    transform-origin: top left;
+}
 .game-limiter{
     box-sizing: border-box;
     width: auto;
@@ -563,21 +624,23 @@ background: radial-gradient(rgba(30, 125, 233, 1),rgba(30, 125, 233, 1));
 .card-bonus{
   position: absolute;
   color: white;
-  font-size: 10px;
+  font-size: 11px;
   /* top: 0px; */
-  left: -6px;
+  left: 1px;
   width: auto;
   /* right: 0px; */
-  padding: 0px 4px;
+  padding: 1px 4px;
   top: 2px;
   background: #9c27b0;
   transform: scale(.8);
-  background: #03c5f4;
+  background: #ff9800;
   background-repeat: no-repeat;
   background-size: contain;
   margin: auto;
-  border-radius: 20px;
-  border: 2px solid #082d4c;
+  border-radius: 6px 0px 4px 0px;
+  border: 2px solid #ffffff70;
+  text-shadow: 1px 1px 0px #352000;
+  letter-spacing: .5px;
 }
 
 /* Game over screen */

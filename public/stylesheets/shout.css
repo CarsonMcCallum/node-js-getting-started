@@ -64,10 +64,10 @@ width: 100%;
 }
 
 .shout-text{
-    font-size: 7rem;
+    font-size: 4rem;
     text-align: center;
     position: absolute;
-    top: -150px;
+    top: 35%;
     margin: auto;
     left: 0px;
     right: 0px;
