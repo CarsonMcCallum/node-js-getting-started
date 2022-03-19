@@ -17,7 +17,7 @@ function Effects(){
             in:{
                 opacity:1,
                 scale:1,
-                y:"-=20",
+                //  y:"-=20",
                 ease:"expo.out"
             },
             out:{
@@ -99,7 +99,7 @@ function Effects(){
     }
 
 
-    this.floatingPoints = function(_number,_child,_position = "top center",_effectType = "default"){
+    this.floatingPoints = function(_number,_child,_position = "center center", _effectType = "default"){
     
         console.log('floatingPoints',_number,_child,_position,_effectType);
 
@@ -112,7 +112,6 @@ function Effects(){
         // Append point effect element to game-effects-inner.
         _this.parent.appendChild(effectElement);
 
-
         let tl = gsap.timeline({onComplete:function(){
             _this.remove(effectElement);
         }});
@@ -122,20 +121,20 @@ function Effects(){
         let effectSize = tools.size(effectElement);
         childPosition.x = childPosition.x - effectSize.width.half;
         childPosition.y = childPosition.y - effectSize.height.full;
+        childPosition.y+=15;
 
         gsap.set(effectElement,{y:childPosition.y,x:childPosition.x});
         gsap.set(effectElement,_this.animations.smallFadeInOut.start);
 
 
         let inAnim = _this.animations.smallFadeInOut.in;
-        inAnim.duration = .5;
+        inAnim.duration = .3;
         tl.to(effectElement,inAnim);
 
         let outAnim = _this.animations.smallFadeInOut.out;
         outAnim.duration = 1;
         tl.to(effectElement, outAnim);
         
-
         return true;
 
     }

@@ -99,7 +99,7 @@ function Tools(){
             console.log('elem width', w)
             console.log('adjust to center x by ',  (w * .5))
             pos.x = pos.x + (w * .5);
-            pos.y = pos.y - (h * .5);
+            pos.y = pos.y + (h * .5);
         }
         return {y:pos.y,x:pos.x};
 

@@ -124,7 +124,7 @@
     overflow: visible;
     gap:10px;
     opacity: 0;
-    width: 60px;
+    width: auto;
 }
 
 .player-gui-picture{
@@ -235,10 +235,10 @@
 
 .player-mini-cards{
     position: fixed;
-    bottom: 23px;
-    left: 180px;
-    height: 30px;
-    width: 50px;
+    bottom: 3.5%;
+    
+    height: 22px;
+    width: 25px;
     z-index: 10;
 }
 .minicard{/* transform: rotate(-8deg); */position: absolute;}
@@ -255,16 +255,15 @@
 .minicard:nth-child(2){
     transform: rotate(12deg);
     left: 3px;
-    top: -4px;
+    top: -1px;
 }
-.minicard:nth-child(3){transform: rotate(6deg);top: -2px;}
+.minicard:nth-child(3){transform: rotate(6deg);top: -1px;}
 
 .player-card-count{position: absolute;z-index: 3;color: black;font-size: 11px;border: 2px solid black;width: auto;text-align: center;padding: 0px 5px;border-radius: 13px;background: red;color: white;left: 5px;}
 
 .player-won-cards-holder{
-    position: fixed;
-    bottom: 28px;
-    left: 180px;
+    position: absolute;
+
     height: 25px;
     width: 25px;
 }

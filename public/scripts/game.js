@@ -252,6 +252,18 @@ function Game(server,parent,toggleMasterLoadingScreen) {
         let gameBoard = document.createElement('div');
         gameBoard.classList.add("board","level-one");
 
+
+        let playerMiniCards = $GUIMethods.playerMiniCards();
+        
+        let gameScreen = document.querySelector('.game-screen');
+        gameScreen.appendChild(playerMiniCards);
+
+        let pGui = document.querySelector('.player-gui[data-player-index="0"]');
+        let guiSize = tools.size(pGui);
+        let guiPOS = tools.position(pGui);
+        gsap.set('.player-mini-cards',{x:180});
+
+        console.log('guiPOS',guiPOS)
         //console.log('elem',this.parent)
         // parent.appendChild(gameBoard);
 
@@ -590,7 +602,7 @@ function Game(server,parent,toggleMasterLoadingScreen) {
             let correctCard = _this.activeCards[i];
             correctCard.classList.remove('selected');
             
-            $effects.floatingPoints(20, correctCard,"top center");
+            $effects.floatingPoints(20, correctCard,"center center");
 
             let tl = new gsap.timeline();
             gsap.set(correctCard,{clearProps:"all"})
